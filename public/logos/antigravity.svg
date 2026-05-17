@@ -1,0 +1,13 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="agGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4285F4"/>
+      <stop offset="35%" stop-color="#9B72F2"/>
+      <stop offset="70%" stop-color="#F472B6"/>
+      <stop offset="100%" stop-color="#FBBC04"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="28" fill="none" stroke="url(#agGrad)" stroke-width="3"/>
+  <path d="M32 12 L46 44 L32 36 L18 44 Z" fill="url(#agGrad)"/>
+  <circle cx="32" cy="32" r="3" fill="#fff"/>
+</svg>

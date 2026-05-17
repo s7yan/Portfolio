@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm init *)",
+      "Bash(npx vite *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(find /var/folders/p1/01gg5g090_3bm6lnq8wg76y80000gn -name \"*.mov\" 2>/dev/null | head -5; find ~/Desktop ~/Downloads -name \"*Screen Recording*\" -o -name \"*hubtown*\" -o -name \"*12.31*\" 2>/dev/null | head -10)",
+      "WebFetch(domain:hubtown.co.in)",
+      "WebFetch(domain:www.awwwards.com)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(mkdir -p /tmp/hubtown_frames)",
+      "Bash(ffmpeg -i \"/Users/s7yan/Downloads/Screen Recording 2026-05-15 at 12.42.47 AM.mp4\" -vf \"fps=1\" -q:v 2 /tmp/hubtown_frames/frame_%04d.jpg)",
+      "Bash(brew list *)",
+      "WebSearch",
+      "WebFetch(domain:www.cdnfonts.com)",
+      "WebFetch(domain:www.onlinewebfonts.com)",
+      "Bash(curl -L -o champagne-limousines.woff2 \"https://db.onlinewebfonts.com/t/610bad71fb2d3eed293ae80d20af1aff.woff2\")",
+      "Bash(curl -L -o champagne-limousines-bold.woff2 \"https://db.onlinewebfonts.com/t/08f3ee508298f856568ea3ee25db5ce8.woff2\")",
+      "Bash(npm run *)",
+      "Bash(sort -t: -k2 -n)",
+      "Bash(curl -sL -o /Users/s7yan/Downloads/portfolio/public/about.webm \"https://reflect.app/home/build/q-c3d7becf.webm\")",
+      "Bash(curl -sL -o /Users/s7yan/Downloads/portfolio/public/about.webm \"https://reflect.app/home/build/q-ba39153a.webm\")",
+      "Bash(mkdir -p /Users/s7yan/Downloads/portfolio/public/logos)",
+      "Bash(curl -sL -o figma.svg \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg\")",
+      "Bash(curl -sL -o photoshop.svg \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg\")",
+      "Bash(curl -sL -o illustrator.svg \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg\")",
+      "Bash(curl -sL -o unity.svg \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unity/unity-original.svg\")",
+      "Bash(curl -sL -o chatgpt.svg \"https://cdn.simpleicons.org/openai/ffffff\")",
+      "Bash(curl -sL -o adobe.svg \"https://cdn.simpleicons.org/adobecreativecloud/DA1F26\")"
+    ]
+  }
+}

@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sayan Das — Portfolio Content Reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    @font-face {
+      font-family: 'Champagne & Limousines';
+      src: url('/fonts/champagne-limousines.woff2') format('woff2');
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Champagne & Limousines';
+      src: url('/fonts/champagne-limousines-bold.woff2') format('woff2');
+      font-weight: 700;
+      font-display: swap;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #020610;
+      --bg2: #040c1a;
+      --bg3: #06111e;
+      --text: #e0e8f5;
+      --text-muted: #6b7e9e;
+      --text-dim: #3d5070;
+      --accent: #0088ff;
+      --accent-cyan: #00ccff;
+      --border: rgba(68, 136, 255, 0.15);
+      --border-strong: rgba(68, 136, 255, 0.28);
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      width: 210mm;
+      margin: 0 auto;
+    }
+
+    /* ─── PAGE BREAKS ─── */
+    .page-break { page-break-before: always; break-before: page; }
+    .no-break { page-break-inside: avoid; break-inside: avoid; }
+
+    /* ─── COVER PAGE ─── */
+    .cover {
+      width: 100%;
+      min-height: 297mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18mm 16mm;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover-bg-lines {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        linear-gradient(rgba(0, 136, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 136, 255, 0.04) 1px, transparent 1px);
+      background-size: 12mm 12mm;
+      pointer-events: none;
+    }
+
+    .cover-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .cover-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 8pt;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .cover-date {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 7pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .cover-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 16mm 0;
+    }
+
+    .cover-eyebrow {
+      font-size: 7pt;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 6mm;
+      font-weight: 500;
+    }
+
+    .cover-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 36pt;
+      font-weight: 400;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 4mm;
+    }
+
+    .cover-title em {
+      font-style: italic;
+      color: var(--accent-cyan);
+    }
+
+    .cover-subtitle {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10pt;
+      font-weight: 400;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 10mm;
+    }
+
+    .cover-divider {
+      width: 24mm;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      margin-bottom: 10mm;
+    }
+
+    .cover-desc {
+      font-family: 'Champagne & Limousines', 'Space Grotesk', sans-serif;
+      font-size: 9.5pt;
+      font-weight: 700;
+      line-height: 1.75;
+      color: var(--text-muted);
+      max-width: 130mm;
+    }
+
+    .cover-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 5mm;
+      margin-top: 12mm;
+      padding-top: 8mm;
+      border-top: 1px solid var(--border);
+    }
+
+    .cover-meta-item { }
+
+    .cover-meta-label {
+      font-size: 6pt;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 1.5mm;
+    }
+
+    .cover-meta-value {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 9pt;
+      color: var(--text);
+    }
+
+    .cover-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-top: 6mm;
+      border-top: 1px solid var(--border);
+    }
+
+    .cover-bottom-label {
+      font-size: 6.5pt;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .cover-bottom-doc {
+      font-size: 6.5pt;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .cover-accent-bar {
+      position: absolute;
+      top: 0; left: 0;
+      width: 2mm;
+      height: 100%;
+      background: linear-gradient(180deg, var(--accent-cyan), var(--accent), transparent);
+    }
+
+    /* ─── TOC PAGE ─── */
+    .toc {
+      padding: 16mm;
+      min-height: 297mm;
+    }
+
+    .toc-eyebrow {
+      font-size: 6.5pt;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 5mm;
+    }
+
+    .toc-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 20pt;
+      color: #fff;
+      margin-bottom: 10mm;
+    }
+
+    .toc-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 8mm;
+    }
+
+    .toc-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 4mm 0;
+      border-bottom: 1px solid rgba(68, 136, 255, 0.07);
+    }
+
+    .toc-item-left {
+      display: flex;
+      align-items: baseline;
+      gap: 4mm;
+    }
+
+    .toc-num {
+      font-size: 7pt;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      min-width: 6mm;
+    }
+
+    .toc-section-name {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 13pt;
+      color: #fff;
+      font-weight: 400;
+    }
+
+    .toc-section-sub {
+      font-size: 7pt;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      margin-top: 1mm;
+    }
+
+    .toc-dots {
+      flex: 1;
+      margin: 0 3mm;
+      border-bottom: 1px dotted rgba(68, 136, 255, 0.15);
+      height: 0;
+      align-self: center;
+      margin-bottom: 1mm;
+    }
+
+    .toc-page {
+      font-size: 7pt;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    .toc-note {
+      margin-top: 12mm;
+      padding: 5mm 6mm;
+      border: 1px solid var(--border);
+      background: rgba(0, 136, 255, 0.03);
+    }
+
+    .toc-note-label {
+      font-size: 6pt;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 2mm;
+    }
+
+    .toc-note-text {
+      font-family: 'Champagne & Limousines', 'Space Grotesk', sans-serif;
+      font-size: 8.5pt;
+      line-height: 1.7;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    /* ─── SECTION PAGES ─── */
+    .section-page {
+      padding: 16mm;
+      min-height: 297mm;
+      position: relative;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8mm;
+      padding-bottom: 4mm;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-num {
+      font-size: 6.5pt;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .section-nav-label {
+      font-size: 6.5pt;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .section-headline {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 22pt;
+      font-weight: 400;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 6mm;
+    }
+
+    .section-headline em { font-style: italic; color: var(--accent-cyan); }
+
+    /* ─── CONTENT BLOCKS ─── */
+    .content-block {
+      margin-bottom: 6mm;
+    }
+
+    .content-label {
+      font-size: 6pt;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 1.5mm;
+      font-weight: 500;
+    }
+
+    .content-text {
+      font-family: 'Champagne & Limousines', 'Space Grotesk', sans-serif;
+      font-size: 9.5pt;
+      font-weight: 700;
+      line-height: 1.75;
+      color: var(--text-muted);
+    }
+
+    .content-headline-text {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 12pt;
+      color: #fff;
+      line-height: 1.4;
+    }
+
+    /* ─── LAYOUT NOTE ─── */
+    .layout-box {
+      background: rgba(0, 136, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 4mm 5mm;
+      margin-bottom: 5mm;
+      font-family: 'Courier New', monospace;
+      font-size: 7pt;
+      color: var(--text-muted);
+      line-height: 1.6;
+      white-space: pre;
+    }
+
+    .layout-label {
+      font-size: 6pt;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2mm;
+    }
+
+    /* ─── WORK CARDS ─── */
+    .work-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4mm;
+      margin-top: 5mm;
+    }
+
+    .work-card {
+      border: 1px solid var(--border);
+      padding: 4mm 5mm;
+      background: rgba(0, 136, 255, 0.02);
+    }
+
+    .work-card-tag {
+      font-size: 6pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5mm;
+    }
+
+    .work-card-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 10pt;
+      color: #fff;
+      margin-bottom: 1.5mm;
+    }
+
+    .work-card-desc {
+      font-family: 'Champagne & Limousines', 'Space Grotesk', sans-serif;
+      font-size: 8pt;
+      font-weight: 700;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ─── SKILLS GRID ─── */
+    .skills-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4mm;
+    }
+
+    .skills-table th {
+      font-size: 6.5pt;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-align: left;
+      padding: 3mm 4mm;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+
+    .skills-table td {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 9pt;
+      color: var(--text);
+      padding: 2mm 4mm;
+      border-bottom: 1px solid rgba(68, 136, 255, 0.05);
+      vertical-align: top;
+    }
+
+    .skills-table td:first-child {
+      color: var(--text-muted);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 7.5pt;
+    }
+
+    /* ─── EXPERIENCE ─── */
+    .exp-entry {
+      padding: 5mm 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .exp-entry:last-child { border-bottom: none; }
+
+    .exp-period {
+      font-size: 6.5pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 1.5mm;
+    }
+
+    .exp-role {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 13pt;
+      color: #fff;
+      margin-bottom: 1mm;
+    }
+
+    .exp-company {
+      font-size: 7pt;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2.5mm;
+    }
+
+    .exp-desc {
+      font-family: 'Champagne & Limousines', 'Space Grotesk', sans-serif;
+      font-size: 8.5pt;
+      font-weight: 700;
+      line-height: 1.75;
+      color: var(--text-muted);
+    }
+
+    /* ─── ANIMATION TABLE ─── */
+    .anim-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 7.5pt;
+      margin-top: 4mm;
+    }
+
+    .anim-table th {
+      text-align: left;
+      font-size: 6pt;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 2.5mm 3mm;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+
+    .anim-table td {
+      padding: 2mm 3mm;
+      border-bottom: 1px solid rgba(68, 136, 255, 0.06);
+      color: var(--text-muted);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 7.5pt;
+      vertical-align: top;
+    }
+
+    .anim-table td:first-child { color: var(--text); font-weight: 500; }
+
+    /* ─── GLOBAL UI PAGE ─── */
+    .ui-block {
+      margin-bottom: 6mm;
+      padding: 4mm 5mm;
+      border: 1px solid var(--border);
+      background: rgba(0, 136, 255, 0.02);
+    }
+
+    .ui-block-label {
+      font-size: 6pt;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 2mm;
+    }
+
+    .ui-block-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 4mm;
+    }
+
+    .ui-block-item {
+      flex: 1;
+    }
+
+    .ui-block-item-label {
+      font-size: 6pt;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 1mm;
+    }
+
+    .ui-block-item-value {
+      font-size: 8.5pt;
+      color: var(--text);
+    }
+
+    /* ─── FOOTER ─── */
+    .page-footer {
+      position: absolute;
+      bottom: 8mm;
+      left: 16mm;
+      right: 16mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 3mm;
+      border-top: 1px solid rgba(68, 136, 255, 0.1);
+    }
+
+    .footer-name {
+      font-size: 6pt;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .footer-page {
+      font-size: 6pt;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+    }
+
+    .footer-dot {
+      width: 3px; height: 3px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    /* ─── INLINE TAG ─── */
+    .tag {
+      display: inline-block;
+      font-size: 6pt;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      border: 1px solid rgba(0, 204, 255, 0.2);
+      padding: 0.5mm 2mm;
+      margin-right: 1.5mm;
+      margin-bottom: 1.5mm;
+    }
+
+    /* ─── TWO COL ─── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6mm;
+    }
+
+    .col-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4mm 0;
+    }
+
+    @media print {
+      html, body { width: 210mm; margin: 0; }
+      .page-break { page-break-before: always; }
+      .no-break { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     PAGE 1 — COVER
+════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-bg-lines"></div>
+  <div class="cover-accent-bar"></div>
+
+  <div class="cover-top">
+    <div class="cover-logo">Sayan Das — Portfolio</div>
+    <div class="cover-date">May 2026</div>
+  </div>
+
+  <div class="cover-main">
+    <div class="cover-eyebrow">Website Content Reference Document</div>
+    <h1 class="cover-title">Designing at the<br>speed of <em>thought.</em></h1>
+    <div class="cover-subtitle">Senior Product Designer · Mumbai, India</div>
+    <div class="cover-divider"></div>
+    <p class="cover-desc">
+      AI-First Product Designer with a postgraduate specialization in
+      Interaction Design, building scalable digital experiences across
+      SaaS, enterprise, automotive, and AI-driven platforms through
+      rapid execution, product thinking, motion-led interactions, and
+      intuitive system design.
+    </p>
+
+    <div class="cover-meta-grid">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Contact</div>
+        <div class="cover-meta-value">hello@sayandas.design</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Sections</div>
+        <div class="cover-meta-value">6 Sections + Global UI</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Tech Stack</div>
+        <div class="cover-meta-value">Three.js · GSAP · Lenis · Vite</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Headline Font</div>
+        <div class="cover-meta-value">Libre Baskerville</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Body Font</div>
+        <div class="cover-meta-value">Champagne & Limousines Bold</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">UI Font</div>
+        <div class="cover-meta-value">Space Grotesk</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <div class="cover-bottom-label">sayandas.design</div>
+    <div class="footer-dot"></div>
+    <div class="cover-bottom-doc">Content Reference · v1.0</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE 2 — TABLE OF CONTENTS
+════════════════════════════════════════ -->
+<div class="toc page-break">
+  <div class="toc-eyebrow">Contents</div>
+  <h2 class="toc-title">Document Overview</h2>
+  <div class="toc-divider"></div>
+
+  <div class="toc-item no-break">
+    <div class="toc-item-left">
+      <span class="toc-num">00</span>
+      <div>
+        <div class="toc-section-name">Global UI Elements</div>
+        <div class="toc-section-sub">Navigation · Scroll Track · Bottom Bar</div>
+      </div>
+    </div>
+    <div class="toc-dots"></div>
+    <div class="toc-page">3</div>
+  </div>
+
+  <div class="toc-item no-break">
+    <div class="toc-item-left">
+      <span class="toc-num">01</span>
+      <div>
+        <div class="toc-section-name">Hero — Launchpad</div>
+        <div class="toc-section-sub">Title · Body · CTA · Layout Skeleton</div>
+      </div>
+    </div>
+    <div class="toc-dots"></div>
+    <div class="toc-page">4</div>
+  </div>
+
+  <div class="toc-item no-break">
+    <div class="toc-item-left">
+      <span class="toc-num">02</span>
+      <div>
+        <div class="toc-section-name">About</div>
+        <div class="toc-section-sub">Headline · Bio Paragraphs</div>
+      </div>
+    </div>
+    <div class="toc-dots"></div>
+    <div class="toc-page">5</div>
+  </div>
+
+  <div class="toc-item no-break">
+    <div class="toc-item-left">
+      <span class="toc-num">03</span>
+      <div>
+        <div class="toc-section-name">Work</div>
+        <div class="toc-section-sub">6 Project Cards · Grid Layout</div>
+      </div>
+    </div>
+    <div class="toc-dots"></div>
+    <div class="toc-page">6</div>
+  </div>
+
+  <div class="toc-item no-break">
+    <div class="toc-item-left">
+      <span class="toc-num">04</span>
+      <div>
+        <div class="toc-section-name">Skills</div>
+        <div class="toc-section-sub">3 Skill Groups · Capabilities</div>
+      </div>
+    </div>
+    <div class="toc-dots"></div>
+    <div class="toc-page">7</div>
+  </div>
+
+  <div class="toc-item no-break">
+    <div class="toc-item-left">
+      <span class="toc-num">05</span>
+      <div>
+        <div class="toc-section-name">Experience</div>
+        <div class="toc-section-sub">2 Roles · Timeline</div>
+      </div>
+    </div>
+    <div class="toc-dots"></div>
+    <div class="toc-page">7</div>
+  </div>
+
+  <div class="toc-item no-break">
+    <div class="toc-item-left">
+      <span class="toc-num">06</span>
+      <div>
+        <div class="toc-section-name">Contact</div>
+        <div class="toc-section-sub">Email · Social Links</div>
+      </div>
+    </div>
+    <div class="toc-dots"></div>
+    <div class="toc-page">8</div>
+  </div>
+
+  <div class="toc-item no-break">
+    <div class="toc-item-left">
+      <span class="toc-num">07</span>
+      <div>
+        <div class="toc-section-name">Animation Reference</div>
+        <div class="toc-section-sub">All entrance animations, triggers, timing</div>
+      </div>
+    </div>
+    <div class="toc-dots"></div>
+    <div class="toc-page">8</div>
+  </div>
+
+  <div class="toc-note no-break" style="margin-top: 10mm;">
+    <div class="toc-note-label">Document Purpose</div>
+    <div class="toc-note-text">
+      This document is a complete content and layout reference for the Sayan Das interactive
+      portfolio at sayandas.design. It covers all text content, typography specifications,
+      scroll-driven section structure, layout skeletons, and animation sequences. Use this
+      as a brief when updating copy, adding case studies, or handing off to developers.
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-name">Sayan Das — Portfolio</div>
+    <div class="footer-dot"></div>
+    <div class="footer-page">Page 2</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE 3 — GLOBAL UI
+════════════════════════════════════════ -->
+<div class="section-page page-break">
+  <div class="section-header">
+    <div class="section-num">Section 00</div>
+    <div class="section-nav-label">Global UI Elements</div>
+  </div>
+
+  <h2 class="section-headline">Fixed Chrome & Navigation</h2>
+
+  <!-- Top Nav -->
+  <div class="ui-block no-break">
+    <div class="ui-block-label">Top Navigation — Fixed, full-width, z-index 100</div>
+    <div class="ui-block-content">
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Left — Logo</div>
+        <div class="ui-block-item-value">"SAYAN DAS"</div>
+      </div>
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Right — Action</div>
+        <div class="ui-block-item-value">"☰ MENU"  [bordered button]</div>
+      </div>
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Font</div>
+        <div class="ui-block-item-value">Space Grotesk, 0.85rem, uppercase, 0.1em tracking</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side Nav -->
+  <div class="ui-block no-break">
+    <div class="ui-block-label">Left Sidebar Navigation — Fixed, vertically centered, click-to-scroll</div>
+    <div class="two-col" style="margin-top: 2mm;">
+      <div>
+        <div class="content-label">Nav Items (in order)</div>
+        <div style="margin-top: 2mm;">
+          <div class="tag">◆ Active</div>
+          <div style="font-size: 8.5pt; color: var(--text-muted); line-height: 2; font-family: 'Space Grotesk';">
+            LAUNCHPAD<br>ABOUT<br>WORK<br>SKILLS<br>EXPERIENCE<br>CONTACT
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="content-label">States</div>
+        <div style="margin-top: 2mm; font-family: 'Space Grotesk'; font-size: 7.5pt; line-height: 2; color: var(--text-muted);">
+          Default: 5px square outline, muted text<br>
+          Active: blue filled square + white text<br>
+          Font: Space Grotesk 0.65rem uppercase<br>
+          Tracking: 0.15em letter-spacing<br>
+          Auto-updates on scroll (ScrollTrigger)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Track -->
+  <div class="ui-block no-break">
+    <div class="ui-block-label">Right Scroll Progress Track — Fixed, right edge, 15%–85% height</div>
+    <div class="ui-block-content">
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Track</div>
+        <div class="ui-block-item-value">2px wide line, dark blue border</div>
+      </div>
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Fill</div>
+        <div class="ui-block-item-value">Blue fill, grows 0% → 100% with scroll</div>
+      </div>
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Glow</div>
+        <div class="ui-block-item-value">0 0 8px rgba(0, 136, 255, 0.4)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="ui-block no-break">
+    <div class="ui-block-label">Bottom Bar — Fixed, full-width, border-top</div>
+    <div class="ui-block-content">
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Left</div>
+        <div class="ui-block-item-value">"🔇 Sound Off"</div>
+      </div>
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Center</div>
+        <div class="ui-block-item-value">"↕ Scroll to Explore"</div>
+      </div>
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Right</div>
+        <div class="ui-block-item-value">"Chat with us"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loader -->
+  <div class="ui-block no-break">
+    <div class="ui-block-label">Techy Block Loader — Full-screen, z-index 10000, plays on page load</div>
+    <div class="ui-block-content">
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Blocks</div>
+        <div class="ui-block-item-value">15 squares, 10×10px each, fill L→R</div>
+      </div>
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Counter</div>
+        <div class="ui-block-item-value">"0%" → "100%", 2.5s duration</div>
+      </div>
+      <div class="ui-block-item">
+        <div class="ui-block-item-label">Label</div>
+        <div class="ui-block-item-value">"Loading Content"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-name">Sayan Das — Portfolio</div>
+    <div class="footer-dot"></div>
+    <div class="footer-page">Page 3</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE 4 — HERO
+════════════════════════════════════════ -->
+<div class="section-page page-break">
+  <div class="section-header">
+    <div class="section-num">Section 01 / Nav: LAUNCHPAD / Height: 100vh</div>
+    <div class="section-nav-label">Hero</div>
+  </div>
+
+  <h2 class="section-headline">Launchpad — The Hero</h2>
+
+  <div class="layout-label">Layout Skeleton</div>
+  <div class="layout-box">┌─────────────────────────────────────────────────┐
+│  [Top Nav]                          fixed        │
+│                                                  │
+│  Designing at the speed of          ← 18vh top  │
+│  thought.                             64px serif │
+│                                                  │
+│              [3D Circuit Cube]      ← center     │
+│           [Mountains · Water]         WebGL      │
+│                                                  │
+│  AI-First Product Designer...       ← auto ~73vh │
+│  [body text, 20px C&L Bold]                      │
+│                                                  │
+│  ✦ EXPLORE MY WORK  [cta button]    ← below body │
+│                                                  │
+│  [Bottom Bar]                         fixed      │
+└─────────────────────────────────────────────────┘</div>
+
+  <div class="col-divider"></div>
+
+  <div class="content-block no-break">
+    <div class="content-label">Headline — Libre Baskerville, 64px, weight 400, white</div>
+    <div class="content-headline-text" style="font-size: 14pt;">
+      "Designing at the speed of <em style="font-style:italic; color: #00ccff;">thought.</em>"
+    </div>
+    <div style="font-size: 6.5pt; color: var(--text-dim); margin-top: 2mm; font-family: 'Space Grotesk';">
+      "thought." → Libre Baskerville Italic · color #00ccff · Animation: translateY(105%) → 0, 1.3s, power4.out
+    </div>
+  </div>
+
+  <div class="content-block no-break">
+    <div class="content-label">Body Text — Champagne & Limousines Bold, 20px, color #5a6e8e</div>
+    <div class="content-text">
+      "AI-First Product Designer with a postgraduate specialization in Interaction Design,
+      building scalable digital experiences across SaaS, enterprise, automotive, and
+      AI-driven platforms through rapid execution, product thinking, motion-led
+      interactions, and intuitive system design."
+    </div>
+  </div>
+
+  <div class="content-block no-break">
+    <div class="content-label">CTA Button — Space Grotesk, 0.7rem uppercase, bordered</div>
+    <div class="content-headline-text" style="font-size: 9pt; font-family: 'Space Grotesk';">
+      "✦ Explore My Work" → links to #work · Hover: blue glow border
+    </div>
+  </div>
+
+  <div class="col-divider"></div>
+
+  <div class="content-block no-break">
+    <div class="content-label">3D Scene — WebGL / Three.js</div>
+    <div style="font-family: 'Space Grotesk'; font-size: 7.5pt; line-height: 1.85; color: var(--text-muted);">
+      <strong style="color: var(--text);">Central Object:</strong> BoxGeometry cube, size 3.5, rotated (0.35, 0.75, 0.1). 6 faces each with unique procedural PCB circuit board texture — Canvas2D generated: glowing cyan traces (rgba 0,200,255,0.9), IC chip outlines, solder pads, via holes, dark navy base (#030810).<br><br>
+      <strong style="color: var(--text);">Environment:</strong> Dark neon blue mountains (5 ranges), reflective water plane, 3000 ambient particles + 500 near-cube particles, sky gradient background.<br><br>
+      <strong style="color: var(--text);">Camera:</strong> 11-keyframe scroll-driven path with smoothstep interpolation. Mouse parallax offset (±0.6x, ±0.3y). Hero position: Vector3(0, 5, 22) → lookAt(0, 4.5, 0).
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-name">Sayan Das — Portfolio</div>
+    <div class="footer-dot"></div>
+    <div class="footer-page">Page 4</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE 5 — ABOUT + WORK
+════════════════════════════════════════ -->
+<div class="section-page page-break">
+  <div class="section-header">
+    <div class="section-num">Section 02 / Nav: ABOUT / Height: 200vh</div>
+    <div class="section-nav-label">About</div>
+  </div>
+
+  <h2 class="section-headline">About</h2>
+
+  <div class="content-block no-break">
+    <div class="content-label">Section Label</div>
+    <div class="content-headline-text">"About" — Space Grotesk, 0.65rem, uppercase, cyan #0088ff</div>
+  </div>
+
+  <div class="content-block no-break">
+    <div class="content-label">Headline — Libre Baskerville, clamp(2–3.5rem), char-by-char reveal animation</div>
+    <div class="content-headline-text">
+      "I design experiences that live at the edge of complexity."
+    </div>
+  </div>
+
+  <div class="content-block no-break">
+    <div class="content-label">Paragraph 1 — Champagne & Limousines, 0.95rem, fade-up reveal</div>
+    <div class="content-text">
+      "With a Masters in Interaction Design and 3+ years shaping products for automotive
+      brands, enterprise systems, and fast-moving startups — I bring the rare ability to
+      hold both craft and systems thinking in the same hand."
+    </div>
+  </div>
+
+  <div class="content-block no-break">
+    <div class="content-label">Paragraph 2 — Champagne & Limousines, 0.95rem, fade-up reveal (+150ms)</div>
+    <div class="content-text">
+      "Currently the sole senior designer at Eccentric, Mumbai, leading end-to-end across
+      multiple clients simultaneously. From concept to ship, I own every pixel."
+    </div>
+  </div>
+
+  <div class="col-divider"></div>
+
+  <!-- WORK -->
+  <div class="section-header" style="margin-top: 5mm;">
+    <div class="section-num">Section 03 / Nav: WORK / Height: 200vh</div>
+    <div class="section-nav-label">Work</div>
+  </div>
+
+  <h2 class="section-headline" style="font-size: 16pt;">Selected Work</h2>
+
+  <div class="content-block no-break">
+    <div class="content-label">Section Label</div>
+    <div class="content-headline-text">"Selected Work"</div>
+  </div>
+
+  <div class="content-block no-break">
+    <div class="content-label">Headline</div>
+    <div class="content-headline-text">"Projects that Define the Craft"</div>
+  </div>
+
+  <div class="work-cards no-break">
+    <div class="work-card">
+      <div class="work-card-tag">Automotive · Feature Experience</div>
+      <div class="work-card-title">Tata Sierra EV</div>
+      <div class="work-card-desc">Interactive feature exploration for India's most anticipated EV revival.</div>
+    </div>
+    <div class="work-card">
+      <div class="work-card-tag">Automotive · Landing Page</div>
+      <div class="work-card-title">MG VS & Hector Facelift</div>
+      <div class="work-card-desc">Premium digital presence for MG Motor's flagship launches.</div>
+    </div>
+    <div class="work-card">
+      <div class="work-card-tag">Enterprise · Dealership App</div>
+      <div class="work-card-title">AutoEdge Platform</div>
+      <div class="work-card-desc">End-to-end dealership management reimagined for modern showrooms.</div>
+    </div>
+    <div class="work-card">
+      <div class="work-card-tag">Consumer · Rider App</div>
+      <div class="work-card-title">Zippee Rider</div>
+      <div class="work-card-desc">Solo-designed, live on iOS & Play Store — built in one month.</div>
+    </div>
+    <div class="work-card">
+      <div class="work-card-tag">Enterprise · ERP Systems</div>
+      <div class="work-card-title">ERP Suites</div>
+      <div class="work-card-desc">Complex workflows for Oil & Gas, Warehouse, and Quick Commerce.</div>
+    </div>
+    <div class="work-card">
+      <div class="work-card-tag">Marketing · Collateral</div>
+      <div class="work-card-title">Brand Collaterals</div>
+      <div class="work-card-desc">Visual campaigns and brand materials across automotive clients.</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-name">Sayan Das — Portfolio</div>
+    <div class="footer-dot"></div>
+    <div class="footer-page">Page 5</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE 6 — SKILLS + EXPERIENCE + CONTACT
+════════════════════════════════════════ -->
+<div class="section-page page-break">
+  <div class="section-header">
+    <div class="section-num">Section 04 / Nav: SKILLS / Height: 200vh</div>
+    <div class="section-nav-label">Skills</div>
+  </div>
+
+  <h2 class="section-headline" style="font-size: 16pt;">Design Without Boundaries</h2>
+
+  <table class="skills-table no-break">
+    <thead>
+      <tr>
+        <th>Group</th>
+        <th>Skill / Tool</th>
+        <th>Group</th>
+        <th>Skill / Tool</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Design Craft</td><td>UX/UI Design · Interaction Design</td>
+        <td>Tools</td><td>Figma · Adobe Suite</td>
+      </tr>
+      <tr>
+        <td></td><td>Product Design · Motion Design</td>
+        <td></td><td>ProtoPie · Spline & Unity</td>
+      </tr>
+      <tr>
+        <td></td><td>Visual Branding · Corporate Identity</td>
+        <td></td><td>Claude Code · Google AI Studio</td>
+      </tr>
+      <tr>
+        <td>Domain Expertise</td><td>ERP / SaaS / CRM</td>
+        <td></td><td></td>
+      </tr>
+      <tr>
+        <td></td><td>Automotive Interfaces</td>
+        <td></td><td></td>
+      </tr>
+      <tr>
+        <td></td><td>Cinematography · AI-Augmented Workflows</td>
+        <td></td><td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="col-divider" style="margin-top: 6mm;"></div>
+
+  <!-- EXPERIENCE -->
+  <div class="section-header" style="margin-top: 5mm;">
+    <div class="section-num">Section 05 / Nav: EXPERIENCE / Height: 200vh</div>
+    <div class="section-nav-label">Experience</div>
+  </div>
+
+  <h2 class="section-headline" style="font-size: 16pt;">The Path So Far</h2>
+
+  <div class="exp-entry no-break">
+    <div class="exp-period">2022 — Present</div>
+    <div class="exp-role">Senior Product Designer</div>
+    <div class="exp-company">Eccentric, Mumbai</div>
+    <div class="exp-desc">Sole designer handling UX/UI across multiple automotive and product clients simultaneously. Led Tata Sierra EV, MG Motor, AutoEdge, and Zippee from concept to ship.</div>
+  </div>
+
+  <div class="exp-entry no-break">
+    <div class="exp-period">2020 — 2022</div>
+    <div class="exp-role">Product Designer</div>
+    <div class="exp-company">Infinite Locus</div>
+    <div class="exp-desc">First-ever hire without an internship. Built design foundations for enterprise products across Oil & Gas, Warehouse Management, and Quick Commerce ERP systems.</div>
+  </div>
+
+  <div class="col-divider" style="margin-top: 6mm;"></div>
+
+  <!-- CONTACT -->
+  <div class="section-header" style="margin-top: 5mm;">
+    <div class="section-num">Section 06 / Nav: CONTACT / Height: 200vh</div>
+    <div class="section-nav-label">Contact</div>
+  </div>
+
+  <h2 class="section-headline" style="font-size: 16pt; font-style: italic;">Let's Build Something Remarkable</h2>
+
+  <div class="two-col no-break">
+    <div>
+      <div class="content-label">Email Link</div>
+      <div style="font-family: 'Space Grotesk'; font-size: 9pt; color: var(--accent-cyan); margin-top: 2mm;">hello@sayandas.design</div>
+      <div style="font-family: 'Space Grotesk'; font-size: 6.5pt; color: var(--text-dim); margin-top: 1.5mm;">mailto: link · hover color #00ccff</div>
+    </div>
+    <div>
+      <div class="content-label">Social Links (placeholders — update URLs)</div>
+      <div style="margin-top: 2mm;">
+        <span class="tag">LinkedIn</span>
+        <span class="tag">Behance</span>
+        <span class="tag">Dribbble</span>
+        <span class="tag">Resume</span>
+      </div>
+      <div style="font-family: 'Space Grotesk'; font-size: 6.5pt; color: var(--text-dim); margin-top: 1.5mm;">All currently href="#" — update with real URLs</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-name">Sayan Das — Portfolio</div>
+    <div class="footer-dot"></div>
+    <div class="footer-page">Page 6</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE 7 — ANIMATION REFERENCE
+════════════════════════════════════════ -->
+<div class="section-page page-break">
+  <div class="section-header">
+    <div class="section-num">Appendix</div>
+    <div class="section-nav-label">Animation & Interaction Reference</div>
+  </div>
+
+  <h2 class="section-headline">Animation Sequence</h2>
+
+  <table class="anim-table no-break">
+    <thead>
+      <tr>
+        <th>Element</th>
+        <th>Animation</th>
+        <th>Trigger</th>
+        <th>Timing</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Loader blocks</td><td>Fill L→R, 0%→100%</td><td>Page load</td><td>2.5s, power1.inOut</td></tr>
+      <tr><td>WebGL canvas</td><td>Fade opacity 0→0.8</td><td>Loader finish</td><td>1.8s, power2.out</td></tr>
+      <tr><td>Top / Side / Bottom nav</td><td>Opacity 0→1, visibility</td><td>Loader finish</td><td>0.8s</td></tr>
+      <tr><td>Hero title</td><td>translateY(105%)→0</td><td>revealHero()</td><td>1.3s, stagger 0.15s</td></tr>
+      <tr><td>Hero body text</td><td>opacity 0→1 + translateY(20px)→0</td><td>After title</td><td>1.0s, -=0.8s</td></tr>
+      <tr><td>Hero CTA</td><td>opacity 0→1 + translateY(15px)→0</td><td>After body</td><td>0.8s, -=0.6s</td></tr>
+      <tr><td>Section headlines</td><td>Char-by-char translateY(110%)→0</td><td>scroll p &gt; 0.08</td><td>0.5s ease, 18ms stagger</td></tr>
+      <tr><td>Reveal-text blocks</td><td>opacity+translateY, fade-up</td><td>scroll p &gt; 0.08</td><td>0.8s ease-out, 150ms stagger</td></tr>
+      <tr><td>Work cards</td><td>opacity+translateY, fade-up</td><td>scroll p &gt; 0.08</td><td>0.6s ease-out, 70ms stagger</td></tr>
+      <tr><td>Skill groups</td><td>opacity+translateY, fade-up</td><td>scroll p &gt; 0.08</td><td>0.6s ease-out, 120ms stagger</td></tr>
+      <tr><td>Experience entries</td><td>opacity+translateY, fade-up</td><td>scroll p &gt; 0.08</td><td>0.6s ease-out, 180ms stagger</td></tr>
+      <tr><td>Contact email</td><td>opacity+translateY, fade-up</td><td>scroll p &gt; 0.08</td><td>0.6s, delay 350ms</td></tr>
+      <tr><td>Contact links</td><td>opacity+translateY, fade-up</td><td>scroll p &gt; 0.08</td><td>0.6s, delay 500ms</td></tr>
+      <tr><td>Section overlay (non-hero)</td><td>Fade in 0→1 (p &lt;0.12), hold, fade out (p &gt;0.78)</td><td>Scroll within section</td><td>scrub: true</td></tr>
+      <tr><td>Hero overlay</td><td>Fade out on scroll (1 - progress×3)</td><td>Scroll section 0</td><td>scrub: true</td></tr>
+      <tr><td>Cube rotation</td><td>Continuous Y + sin wobble X/Z</td><td>Always (rAF)</td><td>0.06 rad/s Y, 0.15 sin</td></tr>
+      <tr><td>Cube emissive</td><td>1.0 + sin(t×0.8)×0.3</td><td>Always (rAF)</td><td>Pulsing ~1.2s cycle</td></tr>
+      <tr><td>Camera</td><td>Lerp between 11 keyframes</td><td>Scroll progress</td><td>lerp 0.07, smoothstep</td></tr>
+      <tr><td>Camera parallax</td><td>Mouse offset ±0.6x, ±0.3y</td><td>mousemove</td><td>lerp 0.03</td></tr>
+      <tr><td>Scroll progress bar</td><td>Height 0%→100%</td><td>Scroll</td><td>transition: 0.1s</td></tr>
+    </tbody>
+  </table>
+
+  <div class="col-divider" style="margin-top: 8mm;"></div>
+
+  <div class="two-col no-break" style="margin-top: 5mm;">
+    <div>
+      <div class="content-label">Pending — Update These Links</div>
+      <div style="font-family: 'Space Grotesk'; font-size: 7.5pt; line-height: 2; color: var(--text-muted); margin-top: 2mm;">
+        LinkedIn URL → href="#"<br>
+        Behance URL → href="#"<br>
+        Dribbble URL → href="#"<br>
+        Resume PDF → href="#"<br>
+        Work card links → no href yet<br>
+        Sound Off toggle → label-only, no audio<br>
+        Menu button → no dropdown yet
+      </div>
+    </div>
+    <div>
+      <div class="content-label">Typography System Summary</div>
+      <div style="font-family: 'Space Grotesk'; font-size: 7.5pt; line-height: 2; color: var(--text-muted); margin-top: 2mm;">
+        Headlines: Libre Baskerville (serif)<br>
+        Body: Champagne & Limousines Bold<br>
+        UI / Labels: Space Grotesk<br>
+        Primary: #ffffff · Muted: #5a6e8e<br>
+        Accent: #0088ff · Cyan: #00ccff<br>
+        Background: #020610<br>
+        Hosting: Google Fonts + /fonts/*.woff2
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-name">Sayan Das — Portfolio</div>
+    <div class="footer-dot"></div>
+    <div class="footer-page">Page 7</div>
+  </div>
+</div>
+
+</body>
+</html>
