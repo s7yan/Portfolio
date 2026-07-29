@@ -5,8 +5,8 @@
   "description": "Portfolio of Sayan Das — Senior Product Designer. Design-tool canvas concept with GSAP-driven motion.",
   "scripts": {
     "dev": "next dev --port 5173",
-    "build": "next build",
-    "start": "next start",
+    "build": "NEXT_DIST_DIR=.next-build next build",
+    "start": "NEXT_DIST_DIR=.next-build next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },

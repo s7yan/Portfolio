@@ -64,13 +64,17 @@ export const PRELOADER = {
   exitDuration: 0.9,
 } as const;
 
-/** Named z-layers so stacking stays sane. */
+/**
+ * Named z-layers so stacking stays sane.
+ * NOTE: `header` sits ABOVE `menu` — the wordmark and the Close toggle must
+ * stay visible and clickable while the mobile menu overlay is open.
+ */
 export const Z = {
   canvas: 0,
   content: 10,
-  header: 40,
   askPill: 45,
   menu: 50,
+  header: 55,
   askPanel: 60,
   preloader: 80,
   cursor: 100,

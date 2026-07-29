@@ -65,6 +65,11 @@ export function MobileMenu({
       role="dialog"
       aria-modal="true"
       aria-label="Navigation"
+      /* Closed menu is visually hidden but must also be unreachable by
+         screen readers and keyboard focus (GSAP's visibility toggle only
+         applies after mount). */
+      aria-hidden={!open}
+      inert={!open}
       className="dot-grid fixed inset-0 flex flex-col justify-center bg-canvas px-[8vw] opacity-0"
       style={{ zIndex: Z.menu, pointerEvents: "none" }}
     >

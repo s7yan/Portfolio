@@ -37,7 +37,15 @@
       "Bash(node -e \"const p=require\\('/Users/s7yan/Downloads/portfolio/node_modules/gsap/package.json'\\); console.log\\('gsap', p.version\\)\")",
       "Bash(npx tsc *)",
       "Bash(echo \"TYPECHECK EXIT: $?\")",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m 'Rebuild: Next.js 15 design-tool canvas portfolio *)",
+      "Bash(git push *)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(curl -s -o /dev/null -w \"root page: %{http_code}\\\\n\" http://localhost:5173)",
+      "Bash(curl -s -o /tmp/claude-501/-Users-s7yan-Downloads-portfolio/822c707c-d311-41c2-80a5-f99f826e6715/scratchpad/layout.css -w \"HTTP %{http_code}, %{size_download} bytes\\\\n\" \"http://localhost:5173/_next/static/css/app/layout.css?v=1785296618470\")",
+      "Read(//tmp/claude-501/-Users-s7yan-Downloads-portfolio/822c707c-d311-41c2-80a5-f99f826e6715/scratchpad/**)",
+      "Bash(curl -s -o /dev/null -w \"dev page after build: HTTP %{http_code}\\\\n\" http://localhost:5173)",
+      "Bash(git commit -q -m 'Fix broken dev server: isolate build output, restore CSS, fix menu stacking *)"
     ]
   }
 }
