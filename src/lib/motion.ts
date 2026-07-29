@@ -58,6 +58,57 @@ export const LENIS = {
   touchMultiplier: 1.4,
 } as const;
 
+/**
+ * Hero design-surface choreography.
+ * Timings in ms unless the key says seconds (GSAP tweens use seconds).
+ */
+export const HERO = {
+  intro: {
+    gridFadeSec: 2,
+    eyebrowSec: 1,
+    eyebrowDelaySec: 0.5,
+    lineSec: 1.2,
+    lineDelaySec: 0.8,
+    lineStaggerSec: 0.2,
+    subtitleSec: 1,
+    subtitleDelaySec: 1.5,
+    /** Dragging unlocks once the name has settled (measured from reveal). */
+    dragEnabledAt: 2500,
+    /** Collaborator arrives after the intro has fully landed. */
+    sequenceStart: 3500,
+  },
+  collab: {
+    /** Glide time budget between targets. */
+    travel: 1000,
+    /** How long a selection is held before moving on. */
+    dwell: 1200,
+    /** Nudge applied to the first name while "tracking" is edited. */
+    nudgePx: 10,
+    nudgeSec: 0.3,
+    marquee: 1200,
+    preEdit: 800,
+    deleteChar: 25,
+    pauseBetween: 400,
+    typeChar: 30,
+    afterType: 1000,
+    exit: 1000,
+    /** Per-frame lerp factor for the pointer glide. */
+    lerp: 0.085,
+  },
+  drag: {
+    /** Beat after release before the layer starts realigning. */
+    settleDelay: 800,
+    snapSec: 1.2,
+    afterSnap: 1300,
+    bubbleDelay: 300,
+    bubbleCharMin: 25,
+    bubbleCharJitter: 40,
+    bubbleHold: 2200,
+    /** Chat bubble flips left when the pointer is within this of the edge. */
+    flipEdge: 280,
+  },
+} as const;
+
 /** Preloader timing. */
 export const PRELOADER = {
   minDuration: 1.4,

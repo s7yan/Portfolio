@@ -12,6 +12,28 @@ import { prefersReducedMotion } from "@/lib/utils";
 
 export const SITE_READY_EVENT = "site:ready";
 
+/**
+ * Latched so late subscribers (StrictMode remounts, lazily mounted scenes)
+ * can tell the reveal already happened instead of waiting forever.
+ */
+let siteReady = false;
+export const isSiteReady = () => siteReady;
+
+/** Run `fn` once the hero is revealed — immediately if that already happened. */
+export function onSiteReady(fn: () => void): () => void {
+  if (siteReady) {
+    fn();
+    return () => {};
+  }
+  document.addEventListener(SITE_READY_EVENT, fn, { once: true });
+  return () => document.removeEventListener(SITE_READY_EVENT, fn);
+}
+
+function markReady() {
+  siteReady = true;
+  document.dispatchEvent(new CustomEvent(SITE_READY_EVENT));
+}
+
 export function Preloader() {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const pctRef = useRef<HTMLSpanElement | null>(null);
@@ -27,7 +49,7 @@ export function Preloader() {
       // Instant exit for reduced motion
       root.style.display = "none";
       setDone(true);
-      document.dispatchEvent(new CustomEvent(SITE_READY_EVENT));
+      markReady();
       return;
     }
 
@@ -62,7 +84,7 @@ export function Preloader() {
       ease: EASE.inOut,
       delay: 0.15,
       onStart: () => {
-        document.dispatchEvent(new CustomEvent(SITE_READY_EVENT));
+        markReady();
       },
     });
 

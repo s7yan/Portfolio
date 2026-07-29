@@ -276,6 +276,254 @@ html.lenis body {
   color: var(--color-mint);
 }
 
+/* ═════════════════════════════════════════════════════════════════════
+   HERO DESIGN SURFACE — draggable layers + design-tool chrome
+   ═════════════════════════════════════════════════════════════════════ */
+
+.hero-layers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1.6rem;
+}
+
+/* A layer = one draggable line of the name (or the subtitle) */
+.layer {
+  position: relative;
+  padding: 0.1em 0.5em;
+  border: 1px solid transparent;
+  transition: border-color 0.25s var(--ease-ui), background-color 0.25s var(--ease-ui);
+  touch-action: none;
+  will-change: transform;
+}
+
+.layer-mask {
+  display: block;
+  overflow: hidden;
+}
+
+.layer-text {
+  display: block;
+  font-size: clamp(4rem, 15.5vw, 13.5rem);
+  line-height: 0.92;
+  color: var(--color-ink);
+  will-change: transform;
+}
+
+/* Outlined last name — stroke colour is swapped live during the edit */
+.layer[data-variant="last"] .layer-text {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--stroke-color, var(--color-ink));
+  transition: -webkit-text-stroke-color 0.4s var(--ease-ui);
+}
+@media (min-width: 1024px) {
+  .layer[data-variant="last"] .layer-text {
+    -webkit-text-stroke-width: 2px;
+  }
+}
+
+/* Layer chip — hidden unless the layer is focused, editing or realigning */
+.layer-chip {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding: 2px 8px;
+  border-radius: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease-ui);
+  background: var(--color-ink);
+  color: var(--color-canvas);
+  font-weight: 700;
+}
+
+/* ── Focus: dashed frame + DRAG TO MOVE affordance ── */
+.layer[data-state="focus"] {
+  border-color: var(--color-line-strong);
+  border-style: dashed;
+  cursor: grab;
+}
+.layer[data-state="focus"] .layer-chip { opacity: 1; }
+
+/* ── Dragging: solid frame + faint fill ── */
+.layer[data-state="dragging"] {
+  border-color: rgba(255, 255, 255, 0.8);
+  border-style: solid;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: grabbing;
+  z-index: 12;
+}
+
+/* ── Editing: violet selection with corner handles + left-aligned chip ── */
+.layer[data-state="editing"] {
+  border-color: var(--color-violet-soft);
+  border-style: solid;
+}
+.layer[data-state="editing"] .layer-chip {
+  opacity: 1;
+  left: -1px;
+  transform: none;
+  background: var(--color-violet-soft);
+  color: #fff;
+  font-weight: 400;
+}
+.layer[data-state="editing"]::before,
+.layer[data-state="editing"]::after,
+.layer[data-state="editing"] .layer-mask::before,
+.layer[data-state="editing"] .layer-mask::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-violet-soft);
+  z-index: 2;
+}
+.layer[data-state="editing"]::before { top: -4px; left: -4px; }
+.layer[data-state="editing"]::after { top: -4px; right: -4px; }
+.layer[data-state="editing"] .layer-mask::before { bottom: -4px; left: -4px; }
+.layer[data-state="editing"] .layer-mask::after { bottom: -4px; right: -4px; }
+
+/* Subtitle layer */
+.layer--subtitle {
+  margin-top: 1.6rem;
+  padding: 0.35em 0.6em;
+}
+.hero-subtitle {
+  font-family: var(--font-sans);
+  font-size: clamp(1.1rem, 2.5vw, 2rem);
+  font-weight: 300;
+  color: var(--color-ink-dim);
+  min-height: 1.3em;
+}
+
+/* Caret used while the subtitle is being retyped */
+.ghost-caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 0.85em;
+  margin-left: 2px;
+  vertical-align: middle;
+  background: var(--color-ink-dim);
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+/* Rubber-band selection sweep */
+.hero-marquee {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  border: 1px solid rgba(167, 139, 250, 0.6);
+  background: rgba(167, 139, 250, 0.15);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s linear;
+}
+
+/* ── Drag telemetry: leader line + dx/dy chip ── */
+.drag-readout {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-ui);
+}
+.drag-readout[data-active] { opacity: 1; }
+
+.drag-readout-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.drag-leader {
+  stroke: #ff3b6b;
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+  opacity: 0.9;
+}
+.delta-chip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: #ff3b6b;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+/* ── Collaborator pointer ── */
+.collab-pointer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 38;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-ui);
+  will-change: transform;
+}
+.collab-pointer[data-visible] { opacity: 1; }
+
+.collab-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-left: 12px;
+  margin-top: 2px;
+}
+
+.chat-bubble {
+  margin-top: 2px;
+  max-width: 260px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border-top-left-radius: 3px;
+  background: var(--color-violet-soft);
+  color: #14121f;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.chat-bubble[data-flip] {
+  transform: translateX(-100%);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 3px;
+}
+.chat-caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: middle;
+  background: #14121f;
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+/* Mobile: layers are display-only (no drag chrome, no collaborator) */
+@media (max-width: 767px), (pointer: coarse) {
+  .layer[data-state="focus"] { border-color: transparent; }
+  .layer[data-state="focus"] .layer-chip { opacity: 0; }
+  .collab-pointer,
+  .drag-readout,
+  .hero-marquee { display: none; }
+}
+
 /* Concierge orb — layered conic gradient sphere */
 .orb {
   background:

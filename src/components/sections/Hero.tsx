@@ -1,182 +1,168 @@
 "use client";
 
 /**
- * Scene 01 — Hero canvas.
- * - Interactive dot-field artboard
- * - Two-line display name: solid + outline, inside a dashed selection
- *   frame that is genuinely draggable (inertia + live dx/dy readout)
- * - Inspector chips, drifting collaborator cursor
- * - Intro choreography fires on the preloader's `site:ready` event
+ * Scene 01 — Hero design surface.
+ *
+ * The name is a two-layer design file: each line is an independently
+ * draggable layer wearing design-tool chrome (selection frames, layer
+ * chips, a DRAG TO MOVE affordance). A scripted collaborator edits the
+ * layers live and reacts when the visitor drags one out of place.
+ *
+ * All choreography lives in `useHeroChoreography`; this component owns
+ * the markup, the intro reveal, and the interactive dot-field.
  */
-import { useEffect, useRef, useState } from "react";
-import { gsap, Draggable, useGSAP } from "@/lib/gsap";
-import { DUR, EASE, STAGGER } from "@/lib/motion";
+import { useRef } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
+import { HERO, EASE } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/utils";
 import { site } from "@/content/site";
-import { SITE_READY_EVENT } from "@/components/preloader/Preloader";
+import { heroScene } from "@/content/hero";
+import { onSiteReady } from "@/components/preloader/Preloader";
 import { DotField } from "@/components/canvas/DotField";
-import { CollabCursor } from "@/components/ui/CollabCursor";
+import { CollabPointer } from "@/components/hero/CollabPointer";
+import { DragReadout } from "@/components/hero/DragReadout";
+import { useHeroChoreography } from "@/components/hero/useHeroChoreography";
 
 export function Hero() {
   const rootRef = useRef<HTMLElement | null>(null);
-  const dragRef = useRef<HTMLDivElement | null>(null);
-  const collabRef = useRef<HTMLDivElement | null>(null);
-  const [delta, setDelta] = useState({ x: 0, y: 0 });
-  const [dragging, setDragging] = useState(false);
+  const firstRef = useRef<HTMLDivElement | null>(null);
+  const lastRef = useRef<HTMLDivElement | null>(null);
+  const subtitleRef = useRef<HTMLParagraphElement | null>(null);
+  const pointerRef = useRef<HTMLDivElement | null>(null);
+  const marqueeRef = useRef<HTMLDivElement | null>(null);
+  const leaderRef = useRef<SVGPathElement | null>(null);
+  const deltaRef = useRef<HTMLDivElement | null>(null);
 
-  /* ── Intro choreography ─────────────────────────────────────────── */
+  const c = useHeroChoreography({
+    root: rootRef,
+    first: firstRef,
+    last: lastRef,
+    subtitle: subtitleRef,
+    pointer: pointerRef,
+    marquee: marqueeRef,
+    leader: leaderRef,
+    delta: deltaRef,
+  });
+
+  /* ── Intro reveal ── */
   useGSAP(
     () => {
       const root = rootRef.current;
-      if (!root) return;
-      const reduced = prefersReducedMotion();
-      const pieces = root.querySelectorAll("[data-hero-rise] .mask-inner");
-      const chips = root.querySelectorAll("[data-hero-chip]");
+      if (!root || prefersReducedMotion()) return;
 
-      if (reduced) return; // everything is visible by default
+      const lines = root.querySelectorAll<HTMLElement>(".layer-text");
+      const eyebrow = root.querySelector(".hero-eyebrow");
+      const subtitle = root.querySelector(".hero-subtitle");
 
-      gsap.set(pieces, { yPercent: 115, rotate: 0.6 });
-      gsap.set(chips, { autoAlpha: 0, y: 8 });
+      gsap.set(lines, { yPercent: 110 });
+      gsap.set([eyebrow, subtitle], { autoAlpha: 0 });
 
       const intro = () => {
-        const tl = gsap.timeline({ defaults: { ease: EASE.out } });
-        tl.to(pieces, {
-          yPercent: 0,
-          rotate: 0,
-          duration: DUR.lg,
-          stagger: STAGGER.lines,
+        gsap.to(eyebrow, {
+          autoAlpha: 1,
+          duration: HERO.intro.eyebrowSec,
+          delay: HERO.intro.eyebrowDelaySec,
         });
-        tl.to(
-          chips,
-          { autoAlpha: 1, y: 0, duration: DUR.md, stagger: STAGGER.items },
-          "-=0.55"
-        );
+        gsap.to(lines, {
+          yPercent: 0,
+          duration: HERO.intro.lineSec,
+          ease: EASE.out,
+          delay: HERO.intro.lineDelaySec,
+          stagger: HERO.intro.lineStaggerSec,
+          onComplete: () => {
+            // Masks must stop clipping once the layers become draggable,
+            // otherwise a dragged line gets cut off by its own mask.
+            root
+              .querySelectorAll<HTMLElement>(".layer-mask")
+              .forEach((m) => (m.style.overflow = "visible"));
+          },
+        });
+        gsap.to(subtitle, {
+          autoAlpha: 1,
+          duration: HERO.intro.subtitleSec,
+          delay: HERO.intro.subtitleDelaySec,
+        });
       };
 
-      // Fire with the preloader wipe (or immediately if it already passed)
-      document.addEventListener(SITE_READY_EVENT, intro, { once: true });
-      return () => document.removeEventListener(SITE_READY_EVENT, intro);
+      return onSiteReady(intro);
     },
     { scope: rootRef }
   );
 
-  /* ── Draggable name with inertia + live readout ─────────────────── */
-  useEffect(() => {
-    const el = dragRef.current;
-    if (!el || prefersReducedMotion()) return;
-
-    const drag = Draggable.create(el, {
-      type: "x,y",
-      inertia: true,
-      edgeResistance: 0.72,
-      bounds: rootRef.current ?? undefined,
-      onPress: () => setDragging(true),
-      onRelease: () => setDragging(false),
-      onDrag() {
-        setDelta({ x: Math.round(this.x), y: Math.round(this.y) });
-      },
-      onThrowUpdate() {
-        setDelta({ x: Math.round(this.x), y: Math.round(this.y) });
-      },
-    })[0];
-
-    return () => {
-      drag?.kill();
-    };
-  }, []);
-
-  /* ── Collaborator cursor drift ──────────────────────────────────── */
-  useGSAP(
-    () => {
-      const el = collabRef.current;
-      if (!el || prefersReducedMotion()) return;
-      const tl = gsap.timeline({ repeat: -1, yoyo: true, delay: 2.2 });
-      tl.fromTo(
-        el,
-        { x: 0, y: 0 },
-        { x: -46, y: 30, duration: 3.4, ease: "sine.inOut" }
-      ).to(el, { x: 24, y: -14, duration: 4.1, ease: "sine.inOut" });
-      return () => tl.kill();
-    },
-    { scope: rootRef }
-  );
+  /** Chip text for a layer: the affordance when focused, else its layer name. */
+  const chipFor = (which: "first" | "last") =>
+    c.states[which] === "focus" ? heroScene.dragLabel : c.labels[which];
 
   return (
     <section
       ref={rootRef}
       id="hero"
       aria-label="Introduction"
-      className="relative flex min-h-svh flex-col overflow-hidden"
+      className="hero relative flex min-h-svh flex-col overflow-hidden"
     >
       <DotField />
 
-      {/* Eyebrow */}
-      <div className="relative z-10 mx-auto mt-[26vh] flex flex-col items-center px-[4vw] text-center md:mt-[24vh]">
-        <p
-          data-hero-rise
-          className="mask mono-label !text-[0.58rem] !tracking-[0.2em] text-ink-dim md:!text-[0.72rem] md:!tracking-[0.34em]"
-        >
-          <span className="mask-inner">{site.hero.eyebrow}</span>
+      <div className="relative z-10 mx-auto mt-[24vh] flex flex-col items-center px-[4vw] text-center">
+        <p className="hero-eyebrow mono-label !text-[0.58rem] !tracking-[0.2em] md:!text-[0.72rem] md:!tracking-[0.34em]">
+          {heroScene.eyebrow}
         </p>
 
-        {/* Draggable name block */}
-        <div
-          ref={dragRef}
-          className="relative mt-7 touch-none select-none will-change-transform"
-          data-cursor-label="Drag"
-        >
-          {/* DRAG TO MOVE chip */}
-          <span
-            data-hero-chip
-            className="chip chip--ink absolute -top-4 left-1/2 z-10 -translate-x-1/2"
-          >
-            DRAG TO MOVE
-          </span>
+        {/* Accessible name — the visual layers below are decorative chrome */}
+        <h1 className="sr-only">
+          {site.name} — {site.role}
+        </h1>
 
-          <div className="selection-frame px-[4vw] py-[1.5vw] md:px-14">
-            <span className="handle" aria-hidden="true" />
-            <h1 className="display text-[clamp(4.5rem,17vw,15rem)] leading-[0.88] text-ink">
-              <span data-hero-rise className="mask">
-                <span className="mask-inner">{site.firstName}</span>
+        <div className="hero-layers" aria-hidden="true">
+          {(["first", "last"] as const).map((which) => (
+            <div
+              key={which}
+              ref={which === "first" ? firstRef : lastRef}
+              className="layer"
+              data-state={c.states[which]}
+              data-variant={which}
+              onPointerDown={c.onLayerPointerDown(which)}
+              onPointerEnter={() => c.onLayerEnter(which)}
+              onPointerLeave={c.onLayerLeave}
+            >
+              <span className="layer-chip">{chipFor(which)}</span>
+              <span className="layer-mask">
+                <span className="layer-text display">
+                  {which === "first" ? heroScene.firstName : heroScene.lastName}
+                </span>
               </span>
-              <span data-hero-rise className="mask">
-                <span className="mask-inner display-outline">{site.lastName}</span>
-              </span>
-            </h1>
-          </div>
-
-          {/* Live inspector readout while dragging */}
-          <span
-            className="chip chip--ghost absolute -bottom-9 left-1/2 -translate-x-1/2 transition-opacity duration-200"
-            style={{ opacity: dragging ? 1 : 0 }}
-            aria-hidden="true"
-          >
-            dx: {delta.x}, dy: {delta.y}
-          </span>
-
-          {/* Drifting collaborator */}
-          <CollabCursor
-            ref={collabRef}
-            name={site.name}
-            className="top-[68%] right-[-8%] hidden md:block"
-          />
+            </div>
+          ))}
         </div>
 
-        {/* Badge chip */}
-        <span data-hero-chip className="chip chip--violet mt-16 md:mt-20">
-          ✦ {site.hero.badge}
-        </span>
+        {/* Subtitle — retyped live by the collaborator */}
+        <div
+          className="layer layer--subtitle"
+          data-state={c.states.subtitle}
+          aria-hidden="true"
+        >
+          <span className="layer-chip">{c.labels.subtitle}</span>
+          <p ref={subtitleRef} className="hero-subtitle">
+            {c.subtitleText}
+            {c.states.subtitle === "editing" && <span className="ghost-caret" />}
+          </p>
+        </div>
+        {/* Stable copy for assistive tech (the animated one is decorative) */}
+        <p className="sr-only">{heroScene.subtitleFinal}</p>
       </div>
 
-      {/* Tagline at the fold (clears the Ask pill) */}
-      <div className="relative z-10 mt-auto px-[4vw] pb-32 md:pb-28">
-        <p
-          data-hero-rise
-          className="mask mx-auto max-w-4xl text-center font-sans text-[clamp(1.2rem,2.6vw,2.1rem)] font-light text-ink-dim"
-        >
-          <span className="mask-inner">{site.hero.tagline}</span>
-        </p>
-      </div>
+      {/* Rubber-band selection sweep */}
+      <div ref={marqueeRef} className="hero-marquee" aria-hidden="true" />
+
+      {/* Drag telemetry + collaborator presence */}
+      <DragReadout ref={deltaRef} active={c.dragActive} lineRef={leaderRef} />
+      <CollabPointer
+        ref={pointerRef}
+        name={heroScene.collabName}
+        visible={c.collabVisible}
+        status={c.collabStatus}
+        message={c.collabMessage}
+        flipped={c.bubbleFlipped}
+      />
     </section>
   );
 }
