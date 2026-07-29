@@ -105,6 +105,35 @@ export const HERO = {
 } as const;
 
 /**
+ * Hero → Statements camera track.
+ * Two stacked artboards inside a pinned, perspective-bearing track; scroll
+ * flies a 3D camera from one to the other. Tween values live in HeroDeck —
+ * these are the scene-level knobs.
+ */
+export const DECK = {
+  scene: {
+    /** Pinned scroll length. */
+    end: "+=350%",
+    scrub: 1,
+    /**
+     * Progress at which the flip has landed and the statements begin.
+     * Matches the timeline: phase1 (1) + phase2 (1.2) of 6.2 total ≈ 0.36.
+     */
+    statementsFrom: 0.36,
+  },
+  flip: {
+    /** Resting state of the incoming panel before the camera reaches it. */
+    nextFrom: {
+      scale: 0.5,
+      rotateX: 45,
+      rotateZ: -10,
+      yPercent: 150,
+      z: -500,
+    },
+  },
+} as const;
+
+/**
  * Route transition — the "Navigate" selection box.
  * Full timeline lives in components/transition/NavTransition.tsx; these are
  * the values it starts from.
