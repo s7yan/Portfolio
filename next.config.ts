@@ -5,10 +5,15 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   /**
-   * Production builds write to `.next-build` (set by the npm scripts) while
-   * `next dev` keeps `.next`. Without this, running `npm run build` while the
-   * dev server is up clobbers its chunks mid-flight and the running app 500s
-   * with "Cannot find module './NNN.js'" and 404s its stylesheet.
+   * `npm run build` writes to the standard `.next` — required by Netlify's
+   * (and most hosts') Next.js build plugin, which looks there specifically.
+   *
+   * `npm run build:local` sets NEXT_DIST_DIR=.next-build instead, so you can
+   * sanity-check a production build on your machine WITHOUT clobbering a
+   * `next dev` server that's running at the same time (both would otherwise
+   * fight over `.next` — dev 500s with "Cannot find module './NNN.js'" and
+   * its stylesheet 404s). Only use build:local for that manual check; real
+   * deploys must go through the plain `build`/`start` scripts.
    */
   distDir: process.env.NEXT_DIST_DIR || ".next",
   images: {

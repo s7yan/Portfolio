@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Netlify's official Next.js Runtime auto-detects App Router, /api routes,
+# and the Node runtime declared in src/app/api/chat/route.ts, then maps
+# them to Netlify Functions — no manual redirects needed.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
