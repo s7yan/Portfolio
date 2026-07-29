@@ -4,12 +4,15 @@
  */
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Draggable } from "gsap/Draggable";
-import { InertiaPlugin } from "gsap/InertiaPlugin";
 import { useGSAP } from "@gsap/react";
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin, useGSAP);
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+
+  // Dev-only handle for debugging animation state from the console.
+  if (process.env.NODE_ENV !== "production") {
+    (window as unknown as { gsap?: typeof gsap }).gsap = gsap;
+  }
 }
 
-export { gsap, ScrollTrigger, Draggable, useGSAP };
+export { gsap, ScrollTrigger, useGSAP };

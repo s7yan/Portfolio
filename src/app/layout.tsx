@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Space_Mono, Libre_Baskerville } from "next/font/google";
 import Script from "next/script";
 import { site } from "@/content/site";
+import { SiteChrome } from "@/components/providers/SiteChrome";
 import "@/styles/globals.css";
 
 const grotesk = Space_Grotesk({
@@ -95,7 +96,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${grotesk.variable} ${spaceMono.variable} ${baskerville.variable}`}>
       <body>
-        {children}
+        <SiteChrome>{children}</SiteChrome>
 
         <script
           type="application/ld+json"

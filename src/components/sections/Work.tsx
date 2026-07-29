@@ -12,6 +12,7 @@ import { gsap, useGSAP, ScrollTrigger } from "@/lib/gsap";
 import { EASE } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/utils";
 import { projects, moreWork, type Project } from "@/content/projects";
+import { TransitionLink } from "@/components/transition/TransitionLink";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SceneIndex } from "@/components/ui/SceneIndex";
 
@@ -67,13 +68,13 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
           </div>
         )}
 
-        <a
-          href={project.href ?? "#contact"}
+        <TransitionLink
+          href={`/work/${project.slug}`}
           className="mono-link mt-auto pt-8"
-          aria-label={`${project.title} — case study coming soon`}
+          aria-label={`Read the ${project.title} case study`}
         >
           VIEW CASE STUDY <span className="arrow">→</span>
-        </a>
+        </TransitionLink>
       </div>
 
       {/* Visual — placeholder frame (swap files in /public/placeholders) */}

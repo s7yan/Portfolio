@@ -37,10 +37,13 @@ Copy `.env.example` → `.env.local`.
 
 ```
 src/
-  app/           layout (fonts/SEO/JSON-LD), page, api/chat, sitemap, robots
+  app/           layout (fonts/SEO/JSON-LD), page, work/[slug],
+                 api/chat, sitemap, robots
   components/
     sections/    Hero · Statements · Partners · Work · Capabilities ·
                  Experience · Footer
+    case-study/  CaseHero (parallax) · MetricsBand (count-up on scroll)
+    transition/  "Navigate" selection-box route transition
     cursor/      Custom multiplayer-style cursor
     preloader/   Percentage counter + wipe reveal
     nav/         Header (wordmark + live IST clock) + mobile menu
@@ -69,9 +72,17 @@ Everything lives in `src/content/*.ts` — no component changes needed:
 | Item | Where |
 | --- | --- |
 | Project covers | `public/placeholders/project-*.svg` (labeled "PLACEHOLDER") |
+| Case study heroes | `public/placeholders/case-*-hero.svg` (labeled "PLACEHOLDER") |
+| Case study prose | `projects.ts` → `sections` on entries marked `draftCopy: true` |
 | Social links | `site.ts` → `socials[].href` (currently `#` + SOON badge) |
 | Resume file | add to `public/` and point the `Resume` social at it |
-| Case-study links | `projects.ts` → `href` per project |
+
+> **Case study copy needs your sign-off.** Every project carries
+> `draftCopy: true`. The narrative was drafted from facts already published
+> on the site (clients, roles, scope); metrics are deliberately directional
+> (↑/↓) except where a hard number was already on record (Zippee: 1 month,
+> 2 stores). Nothing invented is presented as measured — but read it before
+> it goes public, and drop the flag once you have.
 
 ## Motion system
 

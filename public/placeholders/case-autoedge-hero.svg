@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Placeholder hero — replace with AUTOEDGE PLATFORM artwork">
+  <defs>
+    <linearGradient id="bg-autoedge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0a0b"/><stop offset="1" stop-color="#181226"/>
+    </linearGradient>
+    <radialGradient id="gl-autoedge" cx="0.62" cy="0.3" r="0.7">
+      <stop offset="0" stop-color="#a78bfa" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots-autoedge" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#EDEDEF" opacity="0.13"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg-autoedge)"/>
+  <rect width="1600" height="900" fill="url(#dots-autoedge)"/>
+  <rect width="1600" height="900" fill="url(#gl-autoedge)"/>
+  <g stroke="#a78bfa" fill="none" stroke-width="2" opacity="0.65">
+    <rect x="150" y="180" width="560" height="330" rx="10"/>
+    <rect x="760" y="180" width="330" height="150" rx="10"/>
+    <rect x="760" y="360" width="330" height="150" rx="10"/>
+    <rect x="150" y="560" width="940" height="170" rx="10"/>
+  </g>
+  <g fill="#EDEDEF" opacity="0.18">
+    <rect x="186" y="216" width="240" height="16" rx="8"/>
+    <rect x="186" y="248" width="150" height="16" rx="8"/>
+    <rect x="796" y="216" width="180" height="14" rx="7"/>
+    <rect x="796" y="396" width="140" height="14" rx="7"/>
+    <rect x="186" y="596" width="420" height="14" rx="7"/>
+    <rect x="186" y="626" width="300" height="14" rx="7"/>
+  </g>
+  <polyline points="186,470 300,420 420,446 540,380 660,404" fill="none" stroke="#a78bfa" stroke-width="3"/>
+  <text x="150" y="820" font-family="monospace" font-size="26" letter-spacing="8" fill="#9C9CA4">PLACEHOLDER — AUTOEDGE PLATFORM</text>
+</svg>

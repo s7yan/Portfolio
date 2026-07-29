@@ -104,6 +104,21 @@ export const HERO = {
   },
 } as const;
 
+/**
+ * Route transition — the "Navigate" selection box.
+ * Full timeline lives in components/transition/NavTransition.tsx; these are
+ * the values it starts from.
+ */
+export const NAV_TRANSITION = {
+  /** Initial selection-box size, centred on the click point. */
+  boxW: 50,
+  boxH: 36,
+  accent: {
+    shadowFrom: "rgba(167,139,250,0)",
+    shadowTo: "rgba(167,139,250,0.25)",
+  },
+} as const;
+
 /** Preloader timing. */
 export const PRELOADER = {
   minDuration: 1.4,
@@ -123,5 +138,7 @@ export const Z = {
   header: 55,
   askPanel: 60,
   preloader: 80,
+  /** Route transition sits above page chrome but below the cursor. */
+  transition: 90,
   cursor: 100,
 } as const;
