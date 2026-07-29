@@ -94,6 +94,33 @@ Card: `min(92vw, 1360px) × min(85vh, 780px)`, flex — content column 42%,
 visual 58%. The frame is inset 20px with an 8px radius and an inner hairline
 ring.
 
+## Sound
+
+There are no audio files on the reference — every cue is synthesised at
+runtime with Web Audio (`AudioContext` + `OscillatorNode` + `GainNode`),
+so there is nothing to copy, only parameters to match.
+
+| Cue | Wave | Frequency | Gain envelope | Length |
+|---|---|---|---|---|
+| **Select** | `square` | 800 → 50 Hz, exponential | 0.3 → 0.001, exponential | 50 ms |
+| **Tick** | `triangle` | random 300–600 Hz, flat | 0.1 → 0.001, exponential | 30 ms |
+| **Swoop** | `sine` | 300 → 700 Hz, exponential | 0 → 0.15 → 0, linear (attack 20 ms) | 100 ms |
+
+Triggers — note what is **silent**:
+
+- **Select** fires from the routine that shows a selection box, but only
+  when its "quiet" flag is not set. The ambient collaborator sequence
+  passes that flag on every annotation, so the whole idle performance is
+  silent. In practice the cue is heard on drag-release, under
+  `Aligning to Grid…`.
+- **Swoop** fires as the collaborator's chat bubble opens.
+- **Tick** fires once per character as that message types.
+
+So sound is reserved for interactions the visitor caused. The context is
+created lazily and resumed on the first gesture (`mousedown`,
+`touchstart`, `click`, `pointerdown`, `keydown` — capture + passive,
+self-removing once running), which also satisfies autoplay policy.
+
 ## Motion character
 
 - **Easing**: expo/quart outs for entrances; power1 for scrubbed motion

@@ -29,6 +29,7 @@ import { HERO } from "@/lib/motion";
 import { heroScene } from "@/content/hero";
 import { prefersReducedMotion } from "@/lib/utils";
 import { onSiteReady } from "@/components/preloader/Preloader";
+import { sfx } from "@/lib/sfx";
 
 /** Visual state a draggable layer can be in. */
 export type LayerState = "idle" | "focus" | "editing" | "dragging";
@@ -303,6 +304,8 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
 
       setStates((v) => ({ ...v, [which]: "editing" }));
       setLabels((v) => ({ ...v, [which]: heroScene.layers.aligning }));
+      // The one selection that is *not* silent: the visitor caused this.
+      sfx.select();
       setCollabVisible(true);
       aimAtElement(el);
 
@@ -331,10 +334,12 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
         window.innerWidth - s.current.pointer.x < HERO.drag.flipEdge
       );
       setCollabMessage("");
+      sfx.swoop(); // bubble opens
       if (!(await sleep(HERO.drag.bubbleDelay, run))) return;
 
       for (let i = 0; i <= message.length; i++) {
         setCollabMessage(message.slice(0, i));
+        sfx.tick(); // one keystroke per character
         const jitter =
           HERO.drag.bubbleCharMin + Math.random() * HERO.drag.bubbleCharJitter;
         if (!(await sleep(jitter, run))) return;
@@ -360,6 +365,10 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
 
     if (prefersReducedMotion()) return;
 
+    // Listen for the first gesture so the audio context can be unlocked
+    // before the visitor's first drag lands.
+    sfx.arm();
+
     let enable = 0;
     let start = 0;
     const off = onSiteReady(() => {
@@ -380,6 +389,7 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
       off();
       window.clearTimeout(enable);
       window.clearTimeout(start);
+      sfx.disarm();
       st.disposed = true;
       st.run++;
     };
@@ -395,6 +405,10 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
       if (!st.dragEnabled || st.reduced || st.dragging) return;
       const el = elFor(which);
       if (!el) return;
+
+      // This gesture is the unlock; make sure the context is live so the
+      // cues on release are not swallowed.
+      sfx.resume();
 
       // The visitor interrupts whatever the collaborator was doing.
       st.run++;
