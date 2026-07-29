@@ -557,6 +557,235 @@ html.lenis body {
 }
 
 /* ═════════════════════════════════════════════════════════════════════
+   FEATURED WORK — cinema deck
+   ═════════════════════════════════════════════════════════════════════ */
+
+.fw-deck {
+  position: relative;
+  padding-bottom: 10vh;
+}
+
+.fw-intro {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 40px 4vw;
+  max-width: 1440px;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+/* Sticky stage — cards stack in place, with depth for the entry tilt */
+.fw-card-wrapper {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  will-change: transform, opacity;
+}
+
+.fw-card {
+  position: relative;
+  width: min(92vw, 1360px);
+  height: min(85vh, 780px);
+  display: flex;
+  overflow: hidden;
+  background: #0a0a0a;
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 24px 60px rgba(0, 0, 0, 0.4);
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.fw-card__content {
+  width: 42%;
+  padding: clamp(32px, 5vw, 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #0a0a0a;
+  position: relative;
+  z-index: 2;
+}
+
+.fw-card__top {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fw-card__company {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-dim);
+}
+
+.fw-card__title {
+  font-family: var(--font-sans);
+  font-size: clamp(1.6rem, 2.8vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--color-ink);
+}
+
+.fw-card__vision {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(237, 237, 239, 0.55);
+  max-width: 95%;
+}
+
+.fw-card__bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.fw-card__metrics {
+  display: flex;
+  gap: 36px;
+}
+
+.fw-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fw-metric__val {
+  font-family: var(--font-sans);
+  font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+
+.fw-metric__lbl {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-dim);
+}
+
+.fw-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  padding: 14px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  transition: color 0.3s ease;
+}
+.fw-card__cta:hover { color: var(--color-mint); }
+
+/* ── The cinema frame ── */
+.fw-card__visual {
+  width: 58%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #060606;
+}
+
+.fw-cinema-frame {
+  position: absolute;
+  inset: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* Oversized so the pan never exposes an edge */
+.fw-cinema-img {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 180%;
+  height: 140%;
+  filter: brightness(0.85) saturate(0.95);
+  transition: filter 0.6s var(--ease-ui);
+  will-change: transform;
+}
+.fw-card:hover .fw-cinema-img {
+  filter: brightness(0.95) saturate(1);
+}
+
+.fw-cinema-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+  display: block;
+}
+
+.fw-cinema-corners {
+  position: absolute;
+  inset: 20px;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* ── Progress rail ── */
+.fw-progress {
+  position: fixed;
+  right: clamp(20px, 3vw, 40px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-ui);
+  pointer-events: none;
+}
+.fw-progress--visible { opacity: 1; }
+
+.fw-pip {
+  width: 2px;
+  height: 32px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.4s var(--ease-ui), height 0.4s var(--ease-ui);
+}
+.fw-pip--active {
+  background: var(--color-mint);
+  height: 48px;
+}
+
+/* Stack the card on narrow screens; the pan still runs */
+@media (max-width: 900px) {
+  .fw-card {
+    flex-direction: column;
+    height: min(88vh, 720px);
+  }
+  .fw-card__content { width: 100%; padding: 28px; gap: 20px; }
+  .fw-card__visual { width: 100%; flex: 1; }
+  .fw-cinema-frame { inset: 12px; }
+  .fw-progress { display: none; }
+}
+
+/* ═════════════════════════════════════════════════════════════════════
    CAMERA TRACK — hero → statements 3D card flip
    ═════════════════════════════════════════════════════════════════════ */
 

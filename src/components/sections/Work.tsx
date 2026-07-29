@@ -1,148 +1,232 @@
 "use client";
 
 /**
- * Scene 04 — Featured Work.
- * Pinned "FEATURED WORK" header; sticky card stack where each incoming
- * card slides over the previous while the outgoing card scales down and
- * dims. Cards: tag, headline, description, meta/stat rows, CTA, visual.
+ * Scene 04 — Featured Work: the cinema deck.
+ *
+ * Each project is a sticky, full-viewport wrapper so the cards stack in
+ * place. Four scroll effects run per card:
+ *
+ *   1. Cinema pan — the artwork drifts diagonally *inside* its frame
+ *      (x 0→-30%, y 0→-12%) on a lazy scrub, so every card reads like a
+ *      slow camera move rather than a static screenshot.
+ *   2. Entry tilt — the card rotates up from 2.5° about its top edge.
+ *   3. Recede — as the *next* card arrives, the outgoing one scales down,
+ *      dims, lifts and blurs.
+ *   4. Progress rail — a fixed column of pips tracks the active card.
+ *
+ * See docs/interaction-spec.md for the extracted values.
  */
 import Image from "next/image";
 import { useRef } from "react";
 import { gsap, useGSAP, ScrollTrigger } from "@/lib/gsap";
-import { EASE } from "@/lib/motion";
+import { WORK_DECK } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/utils";
 import { projects, moreWork, type Project } from "@/content/projects";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SceneIndex } from "@/components/ui/SceneIndex";
 
-function Stat({ value, label }: { value: string; label: string }) {
-  const isDir = value === "up" || value === "down";
+/** Arrow glyphs for directional metrics. */
+const ARROW: Record<string, string> = { up: "↑", down: "↓" };
+
+function WorkCard({ project, index }: { project: Project; index: number }) {
+  const metrics = project.stats?.slice(0, 2) ?? [];
+
   return (
-    <div className="flex flex-col gap-1.5">
-      <span className="font-sans text-2xl font-medium text-ink">
-        {isDir ? (value === "up" ? "↑" : "↓") : value}
-      </span>
-      <span className="mono-label !text-[0.58rem]">{label}</span>
+    <div className="fw-card-wrapper">
+      <section className="fw-card" aria-labelledby={`fw-title-${project.id}`}>
+        <div className="fw-card__content">
+          <div className="fw-card__top">
+            <div className="fw-card__company">
+              <span>{project.tag}</span>
+            </div>
+            <h3 id={`fw-title-${project.id}`} className="fw-card__title">
+              {project.title}
+            </h3>
+            <p className="fw-card__vision">{project.description}</p>
+          </div>
+
+          <div className="fw-card__bottom">
+            {metrics.length > 0 && (
+              <div className="fw-card__metrics">
+                {metrics.map((m) => (
+                  <div key={m.label} className="fw-metric">
+                    <span className="fw-metric__val">
+                      {ARROW[m.value] ?? m.value}
+                    </span>
+                    <span className="fw-metric__lbl">{m.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <TransitionLink
+              href={`/work/${project.slug}`}
+              className="fw-card__cta"
+              aria-label={`View case study: ${project.title}`}
+            >
+              View Case Study
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M3 8h10M9 4l4 4-4 4"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </TransitionLink>
+          </div>
+        </div>
+
+        <div className="fw-card__visual">
+          <div className="fw-cinema-frame">
+            {/* Oversized on purpose — the pan slides it without exposing edges */}
+            <div className="fw-cinema-img">
+              <Image
+                src={project.image}
+                alt={project.imageAlt}
+                fill
+                sizes="(max-width: 900px) 92vw, 58vw"
+                priority={index === 0}
+              />
+            </div>
+          </div>
+          <div className="fw-cinema-corners" aria-hidden="true" />
+        </div>
+      </section>
     </div>
   );
 }
 
-function WorkCard({ project, index }: { project: Project; index: number }) {
-  return (
-    <article
-      data-card
-      className="work-card sticky top-[13vh] mb-[6vh] grid min-h-[74vh] grid-cols-1 gap-8 overflow-hidden rounded-2xl border border-line bg-surface p-7 will-change-transform md:grid-cols-[5fr_6fr] md:gap-12 md:p-12"
-      aria-labelledby={`work-${project.id}`}
-    >
-      <div className="flex flex-col">
-        <p className="mono-label mb-5">{project.tag}</p>
-        <h3
-          id={`work-${project.id}`}
-          className="font-sans text-[clamp(1.7rem,3.2vw,2.7rem)] leading-tight font-medium text-ink"
-        >
-          {project.title}
-        </h3>
-        <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-ink-dim">
-          {project.description}
-        </p>
-
-        {/* Meta rows */}
-        <dl className="mt-8 flex flex-col gap-2 border-t border-line pt-5">
-          {project.meta.map((m) => (
-            <div key={m.key} className="flex justify-between gap-6">
-              <dt className="mono-label !text-[0.58rem]">{m.key}</dt>
-              <dd className="mono-label !text-[0.58rem] !text-ink text-right">
-                {m.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
-
-        {/* Stats (only where factual) */}
-        {project.stats && (
-          <div className="mt-7 flex gap-10">
-            {project.stats.map((s) => (
-              <Stat key={s.label} value={s.value} label={s.label} />
-            ))}
-          </div>
-        )}
-
-        <TransitionLink
-          href={`/work/${project.slug}`}
-          className="mono-link mt-auto pt-8"
-          aria-label={`Read the ${project.title} case study`}
-        >
-          VIEW CASE STUDY <span className="arrow">→</span>
-        </TransitionLink>
-      </div>
-
-      {/* Visual — placeholder frame (swap files in /public/placeholders) */}
-      <div className="relative min-h-[240px] overflow-hidden rounded-xl border border-line bg-canvas-2 md:min-h-0">
-        <Image
-          src={project.image}
-          alt={project.imageAlt}
-          fill
-          sizes="(max-width: 768px) 92vw, 48vw"
-          className="object-cover"
-          priority={index === 0}
-        />
-      </div>
-    </article>
-  );
-}
-
 export function Work() {
-  const rootRef = useRef<HTMLElement | null>(null);
+  const deckRef = useRef<HTMLElement | null>(null);
+  const railRef = useRef<HTMLDivElement | null>(null);
+  const pipsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useGSAP(
     () => {
-      const root = rootRef.current;
-      if (!root || prefersReducedMotion()) return;
+      const deck = deckRef.current;
+      if (!deck || prefersReducedMotion()) return;
 
-      // Outgoing card recedes as the next one arrives over it
-      const cards = gsap.utils.toArray<HTMLElement>("[data-card]", root);
-      cards.forEach((card, i) => {
-        if (i === cards.length - 1) return;
-        gsap.to(card, {
-          scale: 0.94,
-          autoAlpha: 0.45,
-          filter: "blur(2px)",
-          ease: EASE.scrub,
-          scrollTrigger: {
-            trigger: cards[i + 1],
-            start: "top 90%",
-            end: "top 15%",
-            scrub: true,
-          },
-        });
+      const wrappers = gsap.utils.toArray<HTMLElement>(".fw-card-wrapper", deck);
+      const rail = railRef.current;
+      const { pan, tilt, recede } = WORK_DECK;
+
+      // Progress rail only while the deck is on screen
+      ScrollTrigger.create({
+        trigger: deck,
+        start: "top 80%",
+        end: "bottom 20%",
+        onEnter: () => rail?.classList.add("fw-progress--visible"),
+        onLeave: () => rail?.classList.remove("fw-progress--visible"),
+        onEnterBack: () => rail?.classList.add("fw-progress--visible"),
+        onLeaveBack: () => rail?.classList.remove("fw-progress--visible"),
       });
 
-      return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+      const setActive = (i: number) =>
+        pipsRef.current.forEach((pip, p) =>
+          pip?.classList.toggle("fw-pip--active", p === i)
+        );
+
+      wrappers.forEach((wrapper, i) => {
+        const card = wrapper.querySelector<HTMLElement>(".fw-card");
+        const img = wrapper.querySelector<HTMLElement>(".fw-cinema-img");
+        if (!card) return;
+
+        // 1 — cinema pan inside the frame
+        if (img) {
+          gsap.fromTo(
+            img,
+            { x: "0%", y: "0%" },
+            {
+              x: pan.x,
+              y: pan.y,
+              ease: "none",
+              scrollTrigger: {
+                trigger: wrapper,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: pan.scrub,
+              },
+            }
+          );
+        }
+
+        // 2 — entry tilt about the card's top edge
+        gsap.fromTo(
+          card,
+          { rotateX: tilt.from, transformOrigin: "top center" },
+          {
+            rotateX: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: wrapper,
+              start: "top bottom",
+              end: "top 30%",
+              scrub: true,
+            },
+          }
+        );
+
+        // 3 — active pip
+        ScrollTrigger.create({
+          trigger: wrapper,
+          start: "top 50%",
+          end: "bottom 50%",
+          onEnter: () => setActive(i),
+          onEnterBack: () => setActive(i),
+        });
+
+        // 4 — recede as the next card arrives
+        if (i < wrappers.length - 1) {
+          gsap.to(card, {
+            scale: recede.scale,
+            opacity: recede.opacity,
+            y: recede.y,
+            filter: `blur(${recede.blur}px)`,
+            ease: "none",
+            scrollTrigger: {
+              trigger: wrappers[i + 1],
+              start: "top bottom",
+              end: "top 10%",
+              scrub: true,
+            },
+          });
+        }
+      });
     },
-    { scope: rootRef }
+    { scope: deckRef }
   );
 
   return (
-    <section
-      ref={rootRef}
-      id="work"
-      aria-label="Featured work"
-      className="relative px-[4vw] py-[14vh]"
-    >
-      <SceneIndex index="04" className="mb-10" />
-      <div className="mb-[8vh]">
-        <SectionHeading solid="FEATURED" outline="WORK" />
-      </div>
+    <>
+      <section ref={deckRef} id="work" aria-label="Featured work" className="fw-deck">
+        <div className="fw-intro">
+          <SceneIndex index="04" className="mb-6" />
+          <SectionHeading solid="FEATURED" outline="WORK" />
+        </div>
 
-      <div className="relative">
         {projects.map((p, i) => (
           <WorkCard key={p.id} project={p} index={i} />
+        ))}
+      </section>
+
+      {/* Fixed progress rail */}
+      <div ref={railRef} className="fw-progress" aria-hidden="true">
+        {projects.map((p, i) => (
+          <div
+            key={p.id}
+            ref={(el) => {
+              pipsRef.current[i] = el;
+            }}
+            className={`fw-pip${i === 0 ? " fw-pip--active" : ""}`}
+          />
         ))}
       </div>
 
       {/* More work — compact table rows */}
-      <div className="mt-[10vh]">
+      <div className="px-[4vw] pb-[12vh]">
         <p className="mono-label mb-6">MORE WORK</p>
         {moreWork.map((w) => (
           <div
@@ -154,6 +238,6 @@ export function Work() {
           </div>
         ))}
       </div>
-    </section>
+    </>
   );
 }

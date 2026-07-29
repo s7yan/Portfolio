@@ -67,6 +67,33 @@ flat. Progress thresholds for the scene that follows: `.36` annotation
 phase begins, `.50`–`.54` annotations fade, `.54`–`.88` statement types,
 after `.88` it holds. Reduced motion drops the pin entirely.
 
+## Featured Work: the cinema deck
+
+Each project is a `.fw-card-wrapper` — `position: sticky; top: 0; height:
+100vh; perspective: 1200px` — so cards stack in place. Four scroll effects
+run per card, all `ease: "none"`:
+
+| Effect | Tween | ScrollTrigger |
+|---|---|---|
+| **Cinema pan** (the motion inside the image container) | `.fw-cinema-img` `x 0% → -30%`, `y 0% → -12%` | trigger wrapper, `top bottom` → `bottom top`, **scrub 1.5** |
+| Card tilt on entry | `.fw-card` `rotateX 2.5 → 0`, origin `top center` | trigger wrapper, `top bottom` → `top 30%`, scrub |
+| Outgoing recede | `.fw-card` → `scale .92`, `opacity .15`, `y -30`, `blur(6px)` | trigger **next** wrapper, `top bottom` → `top 10%`, scrub |
+| Active pip | toggle `.fw-pip--active` | trigger wrapper, `top 50%` → `bottom 50%` |
+
+Rail visibility: `.fw-progress--visible` toggles on the deck between
+`top 80%` and `bottom 20%`.
+
+The pan works because the image is deliberately oversized inside its frame:
+`.fw-cinema-img` is `180% × 140%` at `top: -10%; left: -10%`, with the
+`<img>` at `object-fit: cover; object-position: top left`. Sliding it
+`-30%/-12%` never exposes an edge. It also carries
+`filter: brightness(.85) saturate(.95)` easing to `brightness(.95)
+saturate(1)` on card hover over `.6s`.
+
+Card: `min(92vw, 1360px) × min(85vh, 780px)`, flex — content column 42%,
+visual 58%. The frame is inset 20px with an 8px radius and an inner hairline
+ring.
+
 ## Motion character
 
 - **Easing**: expo/quart outs for entrances; power1 for scrubbed motion

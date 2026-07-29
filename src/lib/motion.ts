@@ -134,6 +134,21 @@ export const DECK = {
 } as const;
 
 /**
+ * Featured Work cinema deck.
+ * Sticky full-viewport cards; the artwork pans inside its frame while the
+ * outgoing card recedes. Trigger points live in Work.tsx — these are the
+ * values those tweens move to.
+ */
+export const WORK_DECK = {
+  /** Diagonal drift of the oversized artwork inside its frame. */
+  pan: { x: "-30%", y: "-12%", scrub: 1.5 },
+  /** Entry tilt, in degrees, about the card's top edge. */
+  tilt: { from: 2.5 },
+  /** Resting state of a card once the next one has taken over. */
+  recede: { scale: 0.92, opacity: 0.15, y: -30, blur: 6 },
+} as const;
+
+/**
  * Route transition — the "Navigate" selection box.
  * Full timeline lives in components/transition/NavTransition.tsx; these are
  * the values it starts from.
