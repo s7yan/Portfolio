@@ -43,13 +43,8 @@ export const STAGGER = {
   rows: 0.1,
 } as const;
 
-/** Cursor physics — lerp factors per frame (0–1). */
-export const CURSOR = {
-  dotLerp: 0.35,
-  tagLerp: 0.16,
-  scaleHover: 2.6,
-  scaleDown: 0.72,
-} as const;
+/* The visitor cursor tracks the pointer 1:1 (see components/cursor/Cursor.tsx)
+   — it has no easing, lag or hover scaling, so it needs no motion tokens. */
 
 /** Lenis smooth-scroll configuration. */
 export const LENIS = {

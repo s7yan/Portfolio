@@ -1,130 +1,69 @@
 "use client";
 
 /**
- * Custom multiplayer-style cursor.
+ * Visitor cursor — the "You" pointer.
  *
- * - Arrow + "You" name tag follow the pointer with layered lag
- * - Morphs on interactive targets:
- *     [data-cursor="label"]  + data-cursor-label="View"  → tag swaps text
- *     [data-cursor="press"]  → arrow scales down (press affordance)
- *     a, button              → subtle scale up
- * - Blend-mode ring for imagery via [data-cursor="invert"]
- * - Fine pointers only; reduced-motion drops the lag easing
+ * Deliberately simple, matching the reference interaction: a single element
+ * holding the arrow and its name tag, tracking the pointer 1:1 with no
+ * smoothing, no lag and no hover morphing. The multiplayer read comes from
+ * the tag sitting next to a real-feeling pointer, not from cursor physics.
+ *
+ * The element is ALWAYS rendered so its ref exists when the effect binds —
+ * gating the render on state would leave the listener bound to a null ref
+ * while the native cursor was already hidden, i.e. no cursor at all.
+ * Coarse pointers keep their native cursor and never see this.
  */
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "@/lib/gsap";
-import { CURSOR, Z } from "@/lib/motion";
-import { prefersReducedMotion } from "@/lib/utils";
+import { useEffect, useRef } from "react";
+import { Z } from "@/lib/motion";
 
 export function Cursor() {
-  const rootRef = useRef<HTMLDivElement | null>(null);
-  const arrowRef = useRef<HTMLDivElement | null>(null);
-  const tagRef = useRef<HTMLDivElement | null>(null);
-  const [label, setLabel] = useState("You");
-  const [enabled, setEnabled] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // Touch/coarse pointers: leave the platform cursor alone.
     if (!window.matchMedia("(pointer: fine)").matches) return;
-    setEnabled(true);
-    document.documentElement.classList.add("has-custom-cursor");
 
-    const reduced = prefersReducedMotion();
-    const arrow = arrowRef.current!;
-    const tag = tagRef.current!;
-
-    const arrowX = gsap.quickTo(arrow, "x", {
-      duration: reduced ? 0 : 1 - CURSOR.dotLerp,
-      ease: "power3.out",
-    });
-    const arrowY = gsap.quickTo(arrow, "y", {
-      duration: reduced ? 0 : 1 - CURSOR.dotLerp,
-      ease: "power3.out",
-    });
-    const tagX = gsap.quickTo(tag, "x", {
-      duration: reduced ? 0 : 1 - CURSOR.tagLerp,
-      ease: "power3.out",
-    });
-    const tagY = gsap.quickTo(tag, "y", {
-      duration: reduced ? 0 : 1 - CURSOR.tagLerp,
-      ease: "power3.out",
-    });
-
-    let visible = false;
+    const root = document.documentElement;
+    root.classList.add("has-custom-cursor");
+    el.classList.add("on");
 
     const onMove = (e: MouseEvent) => {
-      if (!visible) {
-        visible = true;
-        gsap.to(rootRef.current, { autoAlpha: 1, duration: 0.25 });
-      }
-      arrowX(e.clientX);
-      arrowY(e.clientY);
-      tagX(e.clientX + 14);
-      tagY(e.clientY + 18);
-
-      // Target interrogation — closest annotated interactive element
-      const t = e.target as HTMLElement;
-      const annotated = t.closest<HTMLElement>("[data-cursor-label]");
-      setLabel(annotated?.dataset.cursorLabel || "You");
-
-      const interactive = t.closest("a, button, [role='button'], [data-cursor]");
-      gsap.to(arrow, {
-        scale: interactive ? 0.8 : 1,
-        duration: 0.3,
-        ease: "power2.out",
-      });
+      el.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
     };
-
-    const onLeave = () => {
-      visible = false;
-      gsap.to(rootRef.current, { autoAlpha: 0, duration: 0.3 });
-    };
-    const onDown = () =>
-      gsap.to(arrow, { scale: CURSOR.scaleDown, duration: 0.15, ease: "power2.out" });
-    const onUp = () =>
-      gsap.to(arrow, { scale: 1, duration: 0.3, ease: "elastic.out(1, 0.6)" });
+    // Don't leave a stray pointer parked on screen when the mouse exits.
+    const onLeave = () => el.classList.remove("on");
+    const onEnter = () => el.classList.add("on");
 
     window.addEventListener("mousemove", onMove, { passive: true });
-    document.documentElement.addEventListener("mouseleave", onLeave);
-    window.addEventListener("mousedown", onDown);
-    window.addEventListener("mouseup", onUp);
+    document.addEventListener("mouseleave", onLeave);
+    document.addEventListener("mouseenter", onEnter);
 
     return () => {
-      document.documentElement.classList.remove("has-custom-cursor");
+      root.classList.remove("has-custom-cursor");
       window.removeEventListener("mousemove", onMove);
-      document.documentElement.removeEventListener("mouseleave", onLeave);
-      window.removeEventListener("mousedown", onDown);
-      window.removeEventListener("mouseup", onUp);
+      document.removeEventListener("mouseleave", onLeave);
+      document.removeEventListener("mouseenter", onEnter);
     };
   }, []);
 
-  if (!enabled) {
-    // Server render + touch devices: nothing (native cursor remains)
-    return null;
-  }
-
   return (
     <div
-      ref={rootRef}
+      ref={ref}
+      className="you-cur"
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 opacity-0"
       style={{ zIndex: Z.cursor }}
     >
-      {/* Arrow */}
-      <div ref={arrowRef} className="absolute -ml-[2px] -mt-[2px] will-change-transform">
-        <svg width="17" height="19" viewBox="0 0 17 19" fill="none">
-          <path
-            d="M1 1l5.2 15.6 2.7-6.2 6.6-1.9L1 1z"
-            fill="#EDEDEF"
-            stroke="#0A0A0B"
-            strokeWidth="1.4"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-      {/* Name tag (lags behind the arrow) */}
-      <div ref={tagRef} className="absolute will-change-transform">
-        <span className="chip chip--ink shadow-lg">{label}</span>
-      </div>
+      <svg width="16" height="20" viewBox="0 0 14 18" fill="none">
+        <path
+          d="M0.5 0.5L13 10.5H5.5L2.5 17.5L0.5 0.5Z"
+          fill="#fff"
+          stroke="rgba(0,0,0,0.3)"
+          strokeWidth="0.5"
+        />
+      </svg>
+      <div className="you-tag">You</div>
     </div>
   );
 }

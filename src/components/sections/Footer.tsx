@@ -24,7 +24,6 @@ export function Footer() {
           ref={emailRef}
           href={`mailto:${site.email}`}
           className="mono-link !text-[0.85rem]"
-          data-cursor-label="Email"
         >
           {site.email} <span className="arrow">→</span>
         </a>

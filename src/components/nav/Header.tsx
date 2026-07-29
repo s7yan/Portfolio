@@ -23,7 +23,6 @@ export function Header() {
         <a
           href="#content"
           className="font-sans text-[15px] font-bold tracking-[0.02em] text-ink uppercase"
-          data-cursor-label="Home"
           aria-label={`${site.name} — back to top`}
         >
           {site.name}

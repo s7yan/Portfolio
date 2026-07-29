@@ -69,7 +69,6 @@ export function Partners() {
               key={p.name}
               data-row
               className="row-invert border-b border-line"
-              data-cursor-label={p.sector}
             >
               <td className="display py-6 text-[clamp(1.6rem,5vw,3.8rem)] md:py-8">
                 {p.name}

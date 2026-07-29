@@ -117,7 +117,6 @@ export function AskConcierge() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        data-cursor-label="Ask"
         className="fixed bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-full border border-line bg-surface/80 py-3 pr-5 pl-3 backdrop-blur-md transition-colors duration-300 hover:border-line-strong"
         style={{ zIndex: Z.askPill }}
         aria-haspopup="dialog"

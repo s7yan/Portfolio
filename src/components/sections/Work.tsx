@@ -70,7 +70,6 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
         <a
           href={project.href ?? "#contact"}
           className="mono-link mt-auto pt-8"
-          data-cursor-label="View"
           aria-label={`${project.title} — case study coming soon`}
         >
           VIEW CASE STUDY <span className="arrow">→</span>

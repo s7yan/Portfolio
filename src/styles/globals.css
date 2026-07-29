@@ -56,6 +56,38 @@ body {
   }
 }
 
+/* ── Visitor cursor: arrow + "You" tag, tracked 1:1 (no lag, no morph) ── */
+.you-cur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-ui);
+  will-change: transform;
+}
+.you-cur.on { opacity: 1; }
+
+/* Only fine pointers get a custom cursor at all */
+@media (pointer: fine) {
+  .you-cur { display: block; }
+}
+
+.you-tag {
+  display: inline-block;
+  margin-left: 8px;
+  margin-top: 4px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: var(--color-ink);
+  color: var(--color-canvas);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
 ::selection {
   background: var(--color-violet);
   color: #fff;
