@@ -359,18 +359,17 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
     st.disposed = false; // reset: StrictMode remounts reuse this ref
 
     if (prefersReducedMotion()) return;
-    // Drag chrome is pointer-driven; touch devices get the static hero.
-    const finePointer = window.matchMedia("(pointer: fine)").matches;
 
     let enable = 0;
     let start = 0;
     const off = onSiteReady(() => {
-      if (finePointer) {
-        enable = window.setTimeout(() => {
-          st.dragEnabled = true;
-          setStates((v) => ({ ...v, first: "focus" }));
-        }, HERO.intro.dragEnabledAt);
-      }
+      // Dragging is available on every pointer type — touch included.
+      // Only the *hover* affordance is desktop-only (see onLayerEnter).
+      enable = window.setTimeout(() => {
+        st.dragEnabled = true;
+        setStates((v) => ({ ...v, first: "focus" }));
+      }, HERO.intro.dragEnabledAt);
+
       start = window.setTimeout(
         () => void runSequence(),
         HERO.intro.sequenceStart
@@ -423,9 +422,18 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
         y: r.top + r.height / 2 - offset.y,
       };
 
-      el.setPointerCapture?.(e.pointerId);
+      // Turn the chrome on BEFORE capturing: setPointerCapture throws if the
+      // pointer id is already gone (fast taps, synthetic events), and an
+      // exception here would otherwise leave a layer that drags with no
+      // selection frame or readout.
       setStates((v) => ({ ...v, [which]: "dragging" }));
       setDragActive(true);
+
+      try {
+        el.setPointerCapture?.(e.pointerId);
+      } catch {
+        /* capture is an optimisation — the window listeners still track it */
+      }
     },
     [elFor, refs.marquee]
   );
@@ -479,9 +487,17 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
     };
   }, [elFor, refs.leader, refs.delta, runRealign]);
 
-  /* ── Focus affordance follows the hovered layer, defaults to first ── */
+  /* ── Focus affordance follows the hovered layer, defaults to first.
+        Hover is meaningless on touch — a tap there would strand the
+        affordance on whichever layer was last touched — so coarse
+        pointers keep the default and move it only by dragging. ── */
+  const hoverCapable = () =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
   const onLayerEnter = useCallback((which: Which) => {
     const st = s.current;
+    if (!hoverCapable()) return;
     if (!st.dragEnabled || st.locked || st.dragging) return;
     st.focus = which;
     setStates((v) => ({
@@ -493,6 +509,7 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
 
   const onLayerLeave = useCallback(() => {
     const st = s.current;
+    if (!hoverCapable()) return;
     if (!st.dragEnabled || st.locked || st.dragging) return;
     st.focus = "first";
     setStates((v) => ({ ...v, first: "focus", last: "idle" }));

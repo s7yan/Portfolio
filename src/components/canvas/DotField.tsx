@@ -90,12 +90,38 @@ export function DotField({ className }: { className?: string }) {
       mouse.y = -9999;
     };
 
+    /**
+     * Touch devices have no pointer to follow, so the field tracks device
+     * tilt instead: gamma (left/right) and beta (front/back), clamped to
+     * ±45° and projected out from the centre of the screen.
+     *
+     * iOS 13+ gates this behind DeviceOrientationEvent.requestPermission(),
+     * which needs an explicit user gesture — we don't prompt, so there the
+     * field simply rests until the visitor drags something.
+     */
+    const onTilt = (e: DeviceOrientationEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const beta = Math.max(-45, Math.min(45, e.beta ?? 0));
+      const gamma = Math.max(-45, Math.min(45, e.gamma ?? 0));
+      mouse.x = window.innerWidth / 2 + gamma * 10 - rect.left;
+      mouse.y = window.innerHeight / 2 + beta * 10 - rect.top;
+    };
+
+    const coarse =
+      window.matchMedia("(pointer: coarse)").matches ||
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0;
+
     resize();
     window.addEventListener("resize", resize);
 
     if (!reduced) {
-      window.addEventListener("mousemove", onMove, { passive: true });
-      window.addEventListener("mouseout", onLeave);
+      if (coarse) {
+        window.addEventListener("deviceorientation", onTilt);
+      } else {
+        window.addEventListener("mousemove", onMove, { passive: true });
+        window.addEventListener("mouseout", onLeave);
+      }
 
       // Pause rendering when the hero leaves the viewport
       const io = new IntersectionObserver(
@@ -120,6 +146,7 @@ export function DotField({ className }: { className?: string }) {
         running = false;
         cancelAnimationFrame(raf);
         window.removeEventListener("resize", resize);
+        window.removeEventListener("deviceorientation", onTilt);
         window.removeEventListener("mousemove", onMove);
         window.removeEventListener("mouseout", onLeave);
       };

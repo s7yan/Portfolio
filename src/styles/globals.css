@@ -547,13 +547,36 @@ html.lenis body {
   animation: caret-blink 1s steps(1) infinite;
 }
 
-/* Mobile: layers are display-only (no drag chrome, no collaborator) */
+/* Touch: the layers stay fully draggable and keep their chrome — only the
+   visitor cursor is dropped (there is no pointer to label). Sizes are
+   trimmed so the annotations don't crowd a phone screen. */
 @media (max-width: 767px), (pointer: coarse) {
-  .layer[data-state="focus"] { border-color: transparent; }
-  .layer[data-state="focus"] .layer-chip { opacity: 0; }
-  .collab-pointer,
-  .drag-readout,
-  .hero-marquee { display: none; }
+  .layer { padding: 0.1em 0.35em; }
+
+  .layer-chip {
+    top: -18px;
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+
+  .delta-chip {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .collab-stack {
+    margin-left: 8px;
+    gap: 3px;
+  }
+  .chat-bubble {
+    max-width: 62vw;
+    font-size: 0.8rem;
+    white-space: normal;
+  }
+  .collab-stack .chip {
+    font-size: 0.55rem;
+    padding: 0.25em 0.55em;
+  }
 }
 
 /* ═════════════════════════════════════════════════════════════════════
