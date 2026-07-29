@@ -27,7 +27,17 @@
       "Bash(curl -sL -o illustrator.svg \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg\")",
       "Bash(curl -sL -o unity.svg \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unity/unity-original.svg\")",
       "Bash(curl -sL -o chatgpt.svg \"https://cdn.simpleicons.org/openai/ffffff\")",
-      "Bash(curl -sL -o adobe.svg \"https://cdn.simpleicons.org/adobecreativecloud/DA1F26\")"
+      "Bash(curl -sL -o adobe.svg \"https://cdn.simpleicons.org/adobecreativecloud/DA1F26\")",
+      "Bash(lsof -i :5173 -sTCP:LISTEN -n -P)",
+      "Bash(git checkout *)",
+      "Bash(git mv *)",
+      "Bash(git rm *)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const p=require\\('/Users/s7yan/Downloads/portfolio/node_modules/next/package.json'\\); console.log\\('next', p.version\\)\")",
+      "Bash(node -e \"const p=require\\('/Users/s7yan/Downloads/portfolio/node_modules/gsap/package.json'\\); console.log\\('gsap', p.version\\)\")",
+      "Bash(npx tsc *)",
+      "Bash(echo \"TYPECHECK EXIT: $?\")",
+      "Bash(git add *)"
     ]
   }
 }

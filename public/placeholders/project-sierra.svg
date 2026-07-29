@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Placeholder — replace with Tata Sierra EV artwork">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#141020"/>
+      <stop offset="1" stop-color="#1d1440"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0.7" cy="0.35" r="0.6">
+      <stop offset="0" stop-color="#7b5bff" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#7b5bff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#g1)"/>
+  <rect width="800" height="600" fill="url(#glow1)"/>
+  <g fill="#55555E" opacity="0.5">
+    <circle cx="60" cy="60" r="2"/><circle cx="140" cy="60" r="2"/><circle cx="220" cy="60" r="2"/><circle cx="300" cy="60" r="2"/>
+    <circle cx="60" cy="140" r="2"/><circle cx="140" cy="140" r="2"/><circle cx="220" cy="140" r="2"/>
+    <circle cx="60" cy="220" r="2"/><circle cx="140" cy="220" r="2"/>
+  </g>
+  <!-- abstract EV silhouette wireframe -->
+  <path d="M120 420 Q220 330 380 328 Q560 326 660 396 L700 420 Q710 450 690 458 L130 458 Q108 450 120 420 Z"
+        fill="none" stroke="#A78BFF" stroke-width="2.5"/>
+  <circle cx="240" cy="452" r="34" fill="none" stroke="#A78BFF" stroke-width="2.5"/>
+  <circle cx="580" cy="452" r="34" fill="none" stroke="#A78BFF" stroke-width="2.5"/>
+  <path d="M300 342 L330 380 M430 336 L450 378" stroke="#7EF0C6" stroke-width="1.5" opacity="0.7"/>
+  <rect x="80" y="88" width="230" height="14" rx="7" fill="#EDEDEF" opacity="0.16"/>
+  <rect x="80" y="116" width="150" height="14" rx="7" fill="#EDEDEF" opacity="0.10"/>
+  <text x="80" y="540" font-family="monospace" font-size="17" letter-spacing="4" fill="#9C9CA4">PLACEHOLDER — SIERRA EV</text>
+</svg>

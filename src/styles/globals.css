@@ -1,0 +1,332 @@
+@import "tailwindcss";
+
+/* ═════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — Tailwind v4 theme
+   ═════════════════════════════════════════════════════════════════════ */
+@theme {
+  /* Palette — near-black canvas, off-white ink, violet brand accent */
+  --color-canvas: #0a0a0b;
+  --color-canvas-2: #0e0e10;
+  --color-surface: #121214;
+  --color-surface-2: #17171a;
+  --color-ink: #ededef;
+  --color-ink-dim: #9c9ca4;
+  --color-ink-faint: #55555e;
+  --color-line: rgba(237, 237, 239, 0.13);
+  --color-line-strong: rgba(237, 237, 239, 0.28);
+  --color-violet: #7b5bff;
+  --color-violet-soft: #a78bff;
+  --color-mint: #7ef0c6;
+
+  --font-sans: var(--font-grotesk), "Space Grotesk", system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), "Space Mono", monospace;
+  --font-serif: var(--font-baskerville), "Libre Baskerville", serif;
+
+  /* Motion (CSS side — JS tokens live in src/lib/motion.ts) */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
+  --ease-ui: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   BASE
+   ═════════════════════════════════════════════════════════════════════ */
+
+html {
+  background: var(--color-canvas);
+  color-scheme: dark;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-ink-faint) transparent;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+/* Hide the native cursor only when the custom cursor is active (fine pointers) */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+::selection {
+  background: var(--color-violet);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-violet-soft);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Lenis recommended base */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   UTILITIES — type + canvas language
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Dot-grid artboard background (design-tool canvas) */
+.dot-grid {
+  background-image: radial-gradient(
+    circle at center,
+    rgba(237, 237, 239, 0.1) 1px,
+    transparent 1.2px
+  );
+  background-size: 26px 26px;
+}
+
+/* Display type — solid + outline pair */
+.display {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+.display-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-ink);
+}
+@media (min-width: 1024px) {
+  .display-outline {
+    -webkit-text-stroke-width: 2px;
+  }
+}
+
+/* Mono UI label */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-dim);
+}
+
+/* Inspector chip (layer tag) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  padding: 0.3em 0.75em;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.chip--violet {
+  background: var(--color-violet);
+  color: #fff;
+}
+.chip--ghost {
+  background: var(--color-surface-2);
+  color: var(--color-ink-dim);
+  border: 1px solid var(--color-line);
+}
+.chip--ink {
+  background: var(--color-ink);
+  color: var(--color-canvas);
+  font-weight: 700;
+}
+
+/* Dashed selection frame around draggable hero name */
+.selection-frame {
+  border: 1px dashed var(--color-line-strong);
+  position: relative;
+}
+.selection-frame::before,
+.selection-frame::after,
+.selection-frame > .handle::before,
+.selection-frame > .handle::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-ink-dim);
+}
+.selection-frame::before { top: -4px; left: -4px; }
+.selection-frame::after { top: -4px; right: -4px; }
+.selection-frame > .handle::before { bottom: -4px; left: -4px; }
+.selection-frame > .handle::after { bottom: -4px; right: -4px; }
+
+/* Text-reveal mask (lines rise from below).
+   Pre-states are applied by GSAP (percent-based, resize-proof) —
+   without JS the content simply stays visible. */
+.mask {
+  overflow: hidden;
+  display: block;
+}
+.mask > .mask-inner {
+  display: block;
+  will-change: transform;
+}
+
+/* Serif italic emphasis inside statements */
+.em-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-violet-soft);
+  letter-spacing: 0;
+}
+
+/* Typewriter caret */
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background: var(--color-ink);
+  vertical-align: -0.12em;
+  animation: caret-blink 0.9s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% { opacity: 0; }
+}
+
+/* Row-inversion hover (tables) */
+.row-invert {
+  position: relative;
+  isolation: isolate;
+  transition: color 0.35s var(--ease-ui);
+}
+.row-invert::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-ink);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.45s var(--ease-out-expo);
+  z-index: -1;
+}
+@media (hover: hover) {
+  .row-invert:hover {
+    color: var(--color-canvas);
+  }
+  .row-invert:hover::after {
+    transform: scaleY(1);
+  }
+  .row-invert:hover .mono-label {
+    color: var(--color-canvas);
+    opacity: 0.7;
+  }
+}
+
+/* Underlined mono link with arrow slide */
+.mono-link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding-bottom: 0.35em;
+  position: relative;
+}
+.mono-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-mint);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease-out-expo);
+}
+.mono-link .arrow {
+  transition: transform 0.35s var(--ease-out-expo);
+}
+@media (hover: hover) {
+  .mono-link:hover .arrow {
+    transform: translateX(5px);
+  }
+  .mono-link:hover::after {
+    transform: scaleX(0.4);
+  }
+}
+
+/* Scene counter (mono, mint) */
+.scene-index {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  color: var(--color-mint);
+}
+
+/* Concierge orb — layered conic gradient sphere */
+.orb {
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.85) 0%, transparent 26%),
+    conic-gradient(from 210deg, #7b5bff, #4a3bbf, #7ef0c6, #a78bff, #7b5bff);
+  filter: saturate(1.15);
+  box-shadow:
+    0 0 14px rgba(123, 91, 255, 0.55),
+    inset 0 0 6px rgba(0, 0, 0, 0.35);
+}
+
+/* Concierge overlay backdrop — dark veil + violet/mint mesh glow */
+.ask-panel {
+  background:
+    radial-gradient(60% 45% at 18% 100%, rgba(123, 91, 255, 0.28) 0%, transparent 60%),
+    radial-gradient(50% 40% at 88% 96%, rgba(126, 240, 198, 0.14) 0%, transparent 60%),
+    rgba(10, 10, 11, 0.92);
+  backdrop-filter: blur(18px);
+}
+
+/* Collaborator cursor (fake multiplayer presence) */
+.collab-cursor {
+  position: absolute;
+  pointer-events: none;
+  z-index: 30;
+  will-change: transform;
+}
+.collab-cursor svg {
+  display: block;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+.collab-cursor .collab-tag {
+  margin-left: 14px;
+  margin-top: 2px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   REDUCED MOTION — hard fallbacks
+   ═════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .mask > .mask-inner {
+    transform: none;
+  }
+  .caret {
+    animation: none;
+  }
+}

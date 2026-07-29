@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Placeholder — replace with MG launch page artwork">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10131c"/>
+      <stop offset="1" stop-color="#0d1f28"/>
+    </linearGradient>
+    <radialGradient id="glow2" cx="0.25" cy="0.8" r="0.7">
+      <stop offset="0" stop-color="#7EF0C6" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#7EF0C6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#g2)"/>
+  <rect width="800" height="600" fill="url(#glow2)"/>
+  <!-- landing page wireframe blocks -->
+  <rect x="90" y="70" width="620" height="360" rx="14" fill="#0A0A0B" stroke="#2A2A31" stroke-width="2"/>
+  <rect x="120" y="104" width="120" height="10" rx="5" fill="#EDEDEF" opacity="0.3"/>
+  <rect x="560" y="100" width="120" height="18" rx="9" fill="#7B5BFF" opacity="0.75"/>
+  <rect x="120" y="160" width="300" height="26" rx="6" fill="#EDEDEF" opacity="0.6"/>
+  <rect x="120" y="200" width="230" height="26" rx="6" fill="#EDEDEF" opacity="0.35"/>
+  <path d="M120 400 Q260 300 430 320 Q600 340 680 260" fill="none" stroke="#7EF0C6" stroke-width="2" opacity="0.8"/>
+  <rect x="120" y="260" width="90" height="30" rx="15" fill="none" stroke="#A78BFF" stroke-width="2"/>
+  <text x="90" y="540" font-family="monospace" font-size="17" letter-spacing="4" fill="#9C9CA4">PLACEHOLDER — MG LAUNCH</text>
+</svg>
