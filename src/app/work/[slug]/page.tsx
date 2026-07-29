@@ -58,6 +58,7 @@ export default async function CaseStudyPage({
         description={project.description}
         image={project.heroImage}
         imageAlt={project.heroImageAlt}
+        credit={project.imageCredit}
       />
 
       <div className="container">

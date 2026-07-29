@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/utils";
+import type { ImageCredit } from "@/content/projects";
 
 export function CaseHero({
   eyebrow,
@@ -16,12 +17,15 @@ export function CaseHero({
   description,
   image,
   imageAlt,
+  credit,
 }: {
   eyebrow: string;
   title: string;
   description: string;
   image: string;
   imageAlt: string;
+  /** Shown when the imagery is third-party (attribution licences). */
+  credit?: ImageCredit;
 }) {
   const rootRef = useRef<HTMLElement | null>(null);
   const bgRef = useRef<HTMLDivElement | null>(null);
@@ -55,6 +59,23 @@ export function CaseHero({
         <h1 className="pd-hero__title">{title}</h1>
         <p className="pd-hero__desc">{description}</p>
       </div>
+
+      {credit && (
+        <p className="pd-hero__credit">
+          Photo{" "}
+          <a href={credit.href} target="_blank" rel="noopener noreferrer">
+            {credit.author}
+          </a>{" "}
+          ·{" "}
+          <a
+            href={credit.licenseHref}
+            target="_blank"
+            rel="noopener noreferrer license"
+          >
+            {credit.license}
+          </a>
+        </p>
+      )}
     </section>
   );
 }

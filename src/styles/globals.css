@@ -956,6 +956,25 @@ html.lenis body {
   z-index: 2;
 }
 
+/* Attribution for third-party hero imagery */
+.pd-hero__credit {
+  position: absolute;
+  right: 5vw;
+  bottom: 1.4rem;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-faint);
+}
+.pd-hero__credit a {
+  color: var(--color-ink-dim);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.3s var(--ease-ui);
+}
+.pd-hero__credit a:hover { color: var(--color-ink); }
+
 .pd-hero__eye {
   font-family: var(--font-mono);
   font-size: 14px;

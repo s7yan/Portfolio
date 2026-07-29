@@ -18,6 +18,20 @@ export interface ProjectStat {
   label: string;
 }
 
+/**
+ * Attribution for third-party imagery. Required by share-alike/attribution
+ * licences (CC BY, CC BY-SA) — rendered visibly on the case study.
+ */
+export interface ImageCredit {
+  /** Photographer or source name. */
+  author: string;
+  /** Link to the original file/source page. */
+  href: string;
+  /** Licence short name, e.g. "CC BY-SA 4.0". */
+  license: string;
+  licenseHref: string;
+}
+
 /** One `h3 + prose` block in the editorial column. */
 export interface CaseSection {
   heading: string;
@@ -40,9 +54,11 @@ export interface Project {
   imageAlt: string;
 
   /* ── Case study ── */
-  /** Full-bleed hero image behind the title (PLACEHOLDER). */
+  /** Full-bleed hero image behind the title. */
   heroImage: string;
   heroImageAlt: string;
+  /** Set when the imagery is third-party and needs visible credit. */
+  imageCredit?: ImageCredit;
   /** Sidebar facts: role / team / duration / company. */
   sidebar: { label: string; value: string }[];
   sections: CaseSection[];
@@ -65,11 +81,21 @@ export const projects: Project[] = [
       { key: "ROLE", value: "LEAD PRODUCT DESIGNER" },
       { key: "SCOPE", value: "FEATURE STORYTELLING · INTERACTION" },
     ],
-    image: "/placeholders/project-sierra.svg",
+    image: "/projects/tata-sierra-card.jpg",
     imageAlt:
-      "Placeholder cover for the Tata Sierra EV interactive feature experience",
-    heroImage: "/placeholders/case-sierra-hero.svg",
-    heroImageAlt: "Placeholder hero artwork for the Tata Sierra EV case study",
+      "A Tata Sierra parked outdoors, three-quarter front view — the original SUV the EV revives",
+    heroImage: "/projects/tata-sierra-hero.jpg",
+    heroImageAlt:
+      "A Tata Sierra in profile, the distinctive wraparound rear glass visible",
+    /* NOTE: these are photographs of the original 1990s Sierra, not the EV —
+       freely licensed, unlike current press imagery. Swap for Sayan's own
+       project artwork when it's cleared for publication. */
+    imageCredit: {
+      author: "Raisahabone",
+      href: "https://commons.wikimedia.org/wiki/Category:Tata_Sierra",
+      license: "CC BY-SA 4.0",
+      licenseHref: "https://creativecommons.org/licenses/by-sa/4.0/",
+    },
     sidebar: [
       { label: "Role", value: "Lead Product Designer" },
       { label: "Team", value: "Design + Engineering" },
