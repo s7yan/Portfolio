@@ -155,10 +155,20 @@ export const DECK = {
     end: "+=350%",
     scrub: 1,
     /**
-     * Progress at which the flip has landed and the statements begin.
-     * Matches the timeline: phase1 (1) + phase2 (1.2) of 6.2 total ≈ 0.36.
+     * Phase boundaries across the pinned scene, as scroll progress.
+     *
+     *   0    → .36  the camera flip (phase1 1 + phase2 1.2 of 6.2 ≈ .36)
+     *   .36  → .50  collaborator annotates the scene counter
+     *   .50  → .54  annotations fade out (over the first .02)
+     *   .54  → .88  the statement types
+     *   .88  → 1    hold
      */
-    statementsFrom: 0.36,
+    flipEnds: 0.36,
+    annotateEnds: 0.5,
+    typingFrom: 0.54,
+    typingEnds: 0.88,
+    /** The fade at .50 completes in this much progress. */
+    annotateFade: 0.02,
   },
   flip: {
     /** Resting state of the incoming panel before the camera reaches it. */

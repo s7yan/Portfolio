@@ -46,6 +46,22 @@ export const heroScene = {
   collabName: site.name,
 
   /**
+   * Before the statement types, the collaborator fiddles with the scene
+   * counter — selecting it and cycling three property edits. Layer label is
+   * fixed; the toast steps through these in order across the phase.
+   */
+  counter: {
+    layer: "span / Counter",
+    edits: [
+      { key: "color", value: "#7EF0C6" },
+      { key: "alignment", value: "center" },
+      { key: "margin-bottom", value: "36px" },
+    ],
+  },
+  /** Layer label while the statement itself is being typed. */
+  statementLayer: "p / Statement 01",
+
+  /**
    * Escalating reactions, cycled one per drag-release.
    * Deliberately in Sayan's voice — the mechanic is borrowed, the words are his.
    */

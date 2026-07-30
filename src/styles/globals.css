@@ -905,6 +905,135 @@ html.lenis body {
 }
 
 /* ═════════════════════════════════════════════════════════════════════
+   STATEMENTS PANEL
+   ═════════════════════════════════════════════════════════════════════ */
+
+.statements-stage {
+  max-width: 900px;
+  padding: 0 6vw;
+  text-align: center;
+}
+
+.statements-counter {
+  display: block;
+  margin-bottom: 36px;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+}
+
+.statements-text {
+  font-family: var(--font-sans);
+  font-size: clamp(1.4rem, 4vw, 3.2rem);
+  font-weight: 500;
+  line-height: 1.3;
+  min-height: 1.3em;
+  color: var(--color-ink);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   SCENE ANNOTATION — the collaborator marking up the statements panel
+   One set of chrome, repositioned: first around the scene counter while
+   properties are tweaked, then around the statement as it types.
+   ═════════════════════════════════════════════════════════════════════ */
+
+.ia-asel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  border: 1.5px solid var(--color-violet-soft);
+  background: rgba(167, 139, 250, 0.05);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s linear;
+  will-change: transform, width, height;
+}
+
+.ia-asel-lbl {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: -2px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: var(--color-violet-soft);
+  color: #000;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ia-asel-handle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--color-violet-soft);
+  border: 1px solid var(--color-canvas-2);
+}
+.ia-asel-handle.tl { top: -4px; left: -4px; }
+.ia-asel-handle.tr { top: -4px; right: -4px; }
+.ia-asel-handle.bl { bottom: -4px; left: -4px; }
+.ia-asel-handle.br { bottom: -4px; right: -4px; }
+
+.ia-ac {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 21;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-ui);
+  will-change: transform;
+}
+.ia-ac svg { filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5)); }
+
+.ia-ac-tag {
+  display: inline-block;
+  margin-left: 12px;
+  margin-top: -2px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  background: var(--color-violet-soft);
+  color: #000;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Property readout: `key → value` */
+.ia-toast {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 22;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s linear;
+  will-change: transform;
+}
+.ia-toast-inner {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: rgba(18, 18, 18, 0.94);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.ia-toast-prop { color: var(--color-ink-dim); }
+.ia-toast-arrow { color: var(--color-violet-soft); }
+.ia-toast-val { color: var(--color-ink); font-weight: 500; }
+
+@media (max-width: 768px) {
+  .ia-asel-lbl { font-size: 9px; padding: 2px 6px; }
+  .ia-toast-inner { font-size: 10px; padding: 5px 9px; }
+  .ia-ac-tag { font-size: 10px; padding: 3px 6px; }
+}
+
+/* ═════════════════════════════════════════════════════════════════════
    ROUTE TRANSITION — "Navigate" selection box
    ═════════════════════════════════════════════════════════════════════ */
 
