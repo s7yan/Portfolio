@@ -212,16 +212,46 @@ export const NAV_TRANSITION = {
   },
 } as const;
 
+/**
+ * Boot sequence — the HUD loader's stage timings, in seconds.
+ * Stages overlap deliberately: each one begins before the previous settles,
+ * which is what makes a cockpit feel like it's coming online rather than
+ * playing a checklist.
+ */
+export const BOOT = {
+  /** Stage 01 — ambience rises out of black. */
+  wake: 0.55,
+  /** Stage 02 — frame geometry traces itself. */
+  apex: 0.5,
+  apexStagger: 0.09,
+  edge: 0.6,
+  edgeStagger: 0.06,
+  inner: 0.5,
+  innerStagger: 0.07,
+  /** Stage 03 — secondary instruments come up one after another. */
+  micro: 0.32,
+  microStagger: 0.035,
+  /** Stage 05 — the counter run. */
+  counter: 2.4,
+  /** Stage 07 — flash, hold, dissolve. */
+  flash: 0.26,
+  hold: 0.65,
+  dissolve: 0.85,
+  /** Abbreviated run for repeat visits within a session. */
+  replayScale: 0.28,
+} as const;
+
 /** Preloader timing. */
 export const PRELOADER = {
   minDuration: 1.4,
   exitDuration: 0.9,
   /**
-   * Hard ceiling in ms. If the reveal timeline hasn't finished by now
-   * (throttled rAF in a background tab, a stalled device), force it — the
-   * site's readiness signal depends on it.
+   * Grace in ms added to the boot timeline's own duration. If the sequence
+   * hasn't finished by then (throttled rAF in a background tab, a stalled
+   * device), it is forced through — the site's readiness signal depends on
+   * it. Measured from the timeline so pacing changes can't truncate the boot.
    */
-  failsafe: 4500,
+  failsafeMargin: 2500,
 } as const;
 
 /**

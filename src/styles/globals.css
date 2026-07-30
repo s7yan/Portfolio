@@ -905,6 +905,222 @@ html.lenis body {
 }
 
 /* ═════════════════════════════════════════════════════════════════════
+   BOOT HUD — instrument-cluster loading sequence
+   Hairline geometry, matte black, restrained bloom. --hud-lift rises with
+   the counter; --hud-peak flashes once at 100%.
+   ═════════════════════════════════════════════════════════════════════ */
+
+.hud-root {
+  --hud-blue: #3aa8ff;
+  --hud-red: #ff355e;
+  --hud-lift: 0.55;
+  --hud-peak: 0;
+
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #050506;
+  will-change: opacity, filter;
+}
+
+/* ── 01 ambience ── */
+.hud-ambience {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hud-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.028) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+.hud-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+.hud-bloom {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(46% 40% at 22% 50%, rgba(58, 168, 255, 0.09) 0%, transparent 70%),
+    radial-gradient(46% 40% at 78% 50%, rgba(255, 53, 94, 0.08) 0%, transparent 70%);
+  opacity: calc(0.55 + var(--hud-peak) * 0.45);
+}
+
+/* ── geometry ── */
+.hud-svg {
+  position: relative;
+  width: min(96%, 1440px);
+  height: auto;
+  overflow: visible;
+}
+
+.hud-stroke {
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: calc(var(--hud-lift) + var(--hud-peak) * 0.4);
+}
+.hud-stroke--blue {
+  stroke: var(--hud-blue);
+  filter: drop-shadow(0 0 4px rgba(58, 168, 255, 0.35));
+}
+.hud-stroke--red {
+  stroke: var(--hud-red);
+  filter: drop-shadow(0 0 4px rgba(255, 53, 94, 0.32));
+}
+.hud-stroke--dim {
+  stroke-width: 1;
+  opacity: calc(var(--hud-lift) * 0.42);
+  filter: none;
+}
+
+/* short dash that travels an edge during diagnostics */
+.hud-sweep {
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.hud-sweep--blue {
+  stroke: #cfe9ff;
+  filter: drop-shadow(0 0 6px rgba(58, 168, 255, 0.75));
+}
+.hud-sweep--red {
+  stroke: #ffd7df;
+  filter: drop-shadow(0 0 6px rgba(255, 53, 94, 0.7));
+}
+
+/* hairline instrument detail */
+.hud-hair {
+  stroke: rgba(237, 237, 239, 0.32);
+  stroke-width: 1;
+  stroke-linecap: square;
+}
+
+.hud-bar {
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transition: opacity 0.18s linear;
+}
+.hud-bar--blue { stroke: var(--hud-blue); }
+.hud-bar--red { stroke: var(--hud-red); }
+
+/* ── gauge units ── */
+.hud-gauge-label {
+  position: absolute;
+  top: calc(50% - min(16vw, 240px));
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  color: rgba(237, 237, 239, 0.45);
+}
+.hud-gauge-label--left { left: max(6vw, 96px); }
+.hud-gauge-label--right { right: max(6vw, 96px); }
+
+/* ── 05 central core ── */
+.hud-core {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.hud-readout {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 0 calc(18px + var(--hud-peak) * 22px) rgba(255, 255, 255, 0.28);
+}
+.hud-pct {
+  font-family: var(--font-sans);
+  font-size: clamp(4rem, 11vw, 9rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.hud-pct-unit {
+  margin-top: 0.5em;
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.6vw, 1.25rem);
+  color: rgba(237, 237, 239, 0.6);
+}
+
+.hud-message {
+  min-height: 1.2em;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1.1vw, 12px);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(237, 237, 239, 0.72);
+  text-align: center;
+  /* messages crossfade rather than swapping abruptly */
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.34s var(--ease-ui), transform 0.34s var(--ease-ui);
+}
+.hud-message.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── bottom status strip ── */
+.hud-status {
+  position: absolute;
+  left: max(6vw, 96px);
+  right: max(6vw, 96px);
+  bottom: max(6vh, 44px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(237, 237, 239, 0.42);
+}
+.hud-status-centre em {
+  font-style: normal;
+  color: rgba(237, 237, 239, 0.28);
+  margin-right: 6px;
+}
+
+/* Phones: the cluster is a landscape composition, so it scales to the
+   viewport width and stays centred rather than overflowing. */
+@media (max-width: 768px) {
+  /* 100% not 100vw — vw includes the scrollbar and would overflow */
+  .hud-svg { width: 100%; }
+  .hud-gauge-label { display: none; }
+  .hud-status {
+    left: 20px;
+    right: 20px;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+  }
+  .hud-status-centre { display: none; }
+  .hud-message {
+    letter-spacing: 0.18em;
+    font-size: 9px;
+    max-width: 78vw;
+  }
+  .hud-pct { font-size: clamp(3rem, 15vw, 4.5rem); }
+  .hud-core { gap: 12px; }
+}
+
+/* ═════════════════════════════════════════════════════════════════════
    STATEMENTS PANEL
    ═════════════════════════════════════════════════════════════════════ */
 
