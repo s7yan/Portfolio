@@ -102,8 +102,9 @@ export function Hero() {
     >
       <DotField />
 
-      <div className="relative z-10 mx-auto mt-[24vh] flex flex-col items-center px-[4vw] text-center">
-        <p className="hero-eyebrow mono-label !text-[0.58rem] !tracking-[0.2em] md:!text-[0.72rem] md:!tracking-[0.34em]">
+      {/* Vertically centred in the artboard, as on the reference */}
+      <div className="relative z-10 mx-auto flex h-full flex-col items-center justify-center px-[4vw] text-center">
+        <p className="hero-eyebrow">
           {heroScene.eyebrow}
         </p>
 

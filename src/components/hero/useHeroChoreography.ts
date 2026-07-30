@@ -30,6 +30,7 @@ import { heroScene } from "@/content/hero";
 import { prefersReducedMotion } from "@/lib/utils";
 import { onSiteReady } from "@/components/preloader/Preloader";
 import { sfx } from "@/lib/sfx";
+import { heroPointers, parkPointer } from "@/lib/heroPointers";
 
 /** Visual state a draggable layer can be in. */
 export type LayerState = "idle" | "focus" | "editing" | "dragging";
@@ -106,6 +107,8 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
     offset: { first: { x: 0, y: 0 }, last: { x: 0, y: 0 } },
     messageIndex: 0,
     reduced: false,
+    /** Bubble opens leftward (near the right edge) — mirrors bubbleFlipped. */
+    flipped: false,
   });
 
   const elFor = useCallback(
@@ -137,18 +140,54 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
     }
 
     let raf = 0;
+    // Spring integrator: accrue velocity toward the target, then damp it.
+    let vx = 0;
+    let vy = 0;
+
     const tick = () => {
       const st = s.current;
       const p = st.pointer;
-      p.x += (p.tx - p.x) * HERO.collab.lerp;
-      p.y += (p.ty - p.y) * HERO.collab.lerp;
+
+      vx += (p.tx - p.x) * HERO.collab.accel;
+      vy += (p.ty - p.y) * HERO.collab.accel;
+      vx *= HERO.collab.damping;
+      vy *= HERO.collab.damping;
+      p.x += vx;
+      p.y += vy;
+
       if (refs.pointer.current) {
         refs.pointer.current.style.transform = `translate3d(${p.x}px, ${p.y}px, 0)`;
+
+        /**
+         * Publish how much room the comment actually has on screen.
+         *
+         * The pointer moves by transform, which doesn't affect layout — so
+         * the bubble would otherwise size itself against the full viewport
+         * and then slide off the edge. Feeding it the real distance to the
+         * edge reproduces the reference, where the comment is positioned
+         * from the cursor and its shrink-to-fit width is capped by the
+         * screen: it wraps a word per line instead of overflowing.
+         */
+        const room = st.flipped
+          ? p.x - HERO.drag.bubbleGutter
+          : window.innerWidth - p.x - HERO.drag.bubbleGutter;
+        refs.pointer.current.style.setProperty(
+          "--bubble-room",
+          `${Math.max(HERO.drag.bubbleMinWidth, Math.round(room))}px`
+        );
       }
+      // Publish for the dot field, which pushes dots away from this cursor.
+      heroPointers.collab.x = p.x;
+      heroPointers.collab.y = p.y;
+
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      // Stop exerting force on the dot field once the hero is gone.
+      parkPointer("collab");
+    };
   }, [refs.pointer]);
 
   /** Point the collaborator pointer at viewport coordinates. */
@@ -309,16 +348,22 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
       setCollabVisible(true);
       aimAtElement(el);
 
-      await new Promise<void>((resolve) => {
-        gsap.to(el, {
-          x: 0,
-          y: 0,
-          duration: HERO.drag.snapSec,
-          ease: "power3.inOut",
-          onUpdate: () => aimAtElement(el),
-          onComplete: resolve,
+      // Cut home rather than glide — see HERO.drag.snapSec.
+      if (HERO.drag.snapSec === 0) {
+        gsap.set(el, { x: 0, y: 0 });
+        aimAtElement(el);
+      } else {
+        await new Promise<void>((resolve) => {
+          gsap.to(el, {
+            x: 0,
+            y: 0,
+            duration: HERO.drag.snapSec,
+            ease: "power3.inOut",
+            onUpdate: () => aimAtElement(el),
+            onComplete: resolve,
+          });
         });
-      });
+      }
       s.current.offset[which] = { x: 0, y: 0 };
       if (!ok()) return;
       if (!(await sleep(HERO.drag.afterSnap, run))) return;
@@ -330,9 +375,9 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
       const message = heroScene.messages[s.current.messageIndex];
       s.current.messageIndex =
         (s.current.messageIndex + 1) % heroScene.messages.length;
-      setBubbleFlipped(
-        window.innerWidth - s.current.pointer.x < HERO.drag.flipEdge
-      );
+      const flip = window.innerWidth - s.current.pointer.x < HERO.drag.flipEdge;
+      s.current.flipped = flip; // read by the RAF loop when sizing the bubble
+      setBubbleFlipped(flip);
       setCollabMessage("");
       sfx.swoop(); // bubble opens
       if (!(await sleep(HERO.drag.bubbleDelay, run))) return;
@@ -371,13 +416,24 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
 
     let enable = 0;
     let start = 0;
+
+    const armDrag = () => {
+      if (st.dragEnabled) return;
+      st.dragEnabled = true;
+      setStates((v) => (v.first === "idle" ? { ...v, first: "focus" } : v));
+    };
+
+    /**
+     * Independent safety net: never let the hero stay dead because a signal
+     * went missing. Whatever happens to the reveal, the name becomes
+     * draggable by this point.
+     */
+    const failsafe = window.setTimeout(armDrag, HERO.intro.dragFailsafe);
+
     const off = onSiteReady(() => {
       // Dragging is available on every pointer type — touch included.
       // Only the *hover* affordance is desktop-only (see onLayerEnter).
-      enable = window.setTimeout(() => {
-        st.dragEnabled = true;
-        setStates((v) => ({ ...v, first: "focus" }));
-      }, HERO.intro.dragEnabledAt);
+      enable = window.setTimeout(armDrag, HERO.intro.dragEnabledAt);
 
       start = window.setTimeout(
         () => void runSequence(),
@@ -389,6 +445,7 @@ export function useHeroChoreography(refs: HeroRefs): HeroChoreography {
       off();
       window.clearTimeout(enable);
       window.clearTimeout(start);
+      window.clearTimeout(failsafe);
       sfx.disarm();
       st.disposed = true;
       st.run++;

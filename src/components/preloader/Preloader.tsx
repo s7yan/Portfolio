@@ -88,12 +88,30 @@ export function Preloader() {
       },
     });
 
+    /**
+     * Safety net. The whole site — including every hero interaction — waits
+     * on the readiness signal this timeline emits. rAF is throttled to a stop
+     * in background tabs, so a visitor who opens the site in a background tab
+     * (or on a stalled device) could otherwise come back to a veil that never
+     * lifts and a hero that never becomes interactive. Force it through.
+     */
+    const failsafe = window.setTimeout(() => {
+      if (tl.progress() < 1) {
+        tl.progress(1, false); // fires markReady via the exit tween
+        tl.kill();
+        document.documentElement.classList.remove("lenis-stopped");
+        markReady(); // idempotent — latched
+        setDone(true);
+      }
+    }, PRELOADER.failsafe);
+
     // Wait for fonts so the reveal never flashes fallback type
     document.fonts?.ready.then(() => {
       /* counter already pacing — nothing to accelerate in min-duration mode */
     });
 
     return () => {
+      window.clearTimeout(failsafe);
       tl.kill();
       document.documentElement.classList.remove("lenis-stopped");
     };

@@ -319,25 +319,41 @@ html.lenis body {
   margin-top: 1.6rem;
 }
 
-/* A layer = one draggable line of the name (or the subtitle) */
+/* A layer = one draggable line of the name (or the subtitle).
+   Selection must be off: a mouse-down on live text otherwise starts a native
+   text-selection drag, which cancels the pointer stream and kills the drag. */
 .layer {
   position: relative;
   padding: 0.1em 0.5em;
   border: 1px solid transparent;
   transition: border-color 0.25s var(--ease-ui), background-color 0.25s var(--ease-ui);
   touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
   will-change: transform;
 }
 
+.layer-text,
+.layer-chip {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Padding gives the mask room so ascenders/descenders aren't clipped
+   mid-reveal, and keeps the selection frame off the glyphs. */
 .layer-mask {
-  display: block;
+  display: inline-block;
   overflow: hidden;
+  padding: 10px 20px;
 }
 
 .layer-text {
-  display: block;
-  font-size: clamp(4rem, 15.5vw, 13.5rem);
-  line-height: 0.92;
+  display: inline-block;
+  font-size: clamp(5rem, 14vw, 14rem);
+  line-height: 0.85;
+  letter-spacing: normal; /* the display utility tightens; the name doesn't */
+  text-transform: uppercase;
   color: var(--color-ink);
   will-change: transform;
 }
@@ -423,15 +439,34 @@ html.lenis body {
 
 /* Subtitle layer */
 .layer--subtitle {
-  margin-top: 1.6rem;
-  padding: 0.35em 0.6em;
+  margin-top: 10px;
+  padding: 10px;
 }
 .hero-subtitle {
+  display: inline-block;
   font-family: var(--font-sans);
-  font-size: clamp(1.1rem, 2.5vw, 2rem);
+  font-size: 1.6rem;
   font-weight: 300;
   color: var(--color-ink-dim);
   min-height: 1.3em;
+}
+
+/* Mono eyebrow above the name */
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--color-ink-dim);
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .hero-eyebrow { font-size: 10px; letter-spacing: 2px; }
+  .hero-subtitle { font-size: 1rem; }
+  .layer--subtitle { padding: 10px 6px; }
+  .layer-mask { padding: 8px 12px; }
 }
 
 /* Caret used while the subtitle is being retyped */
@@ -518,24 +553,45 @@ html.lenis body {
   margin-top: 2px;
 }
 
+/* Comment bubble. width: max-content stops the flex column from squeezing
+   it to its longest word — which is how a message ends up rendering one
+   character per line — while max-width keeps it on screen. */
 .chat-bubble {
   margin-top: 2px;
-  max-width: 260px;
-  padding: 6px 12px;
-  border-radius: 12px;
-  border-top-left-radius: 3px;
+  width: max-content;
+  /* --bubble-room is the live distance from the cursor to the screen edge,
+     written each frame by the choreography. */
+  max-width: min(360px, var(--bubble-room, 360px));
+  padding: 6px 14px;
+  /* sharp corner points back at the cursor */
+  border-radius: 0 12px 12px 12px;
   background: var(--color-violet-soft);
-  color: #14121f;
+  color: #000;
   font-family: var(--font-sans);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.35;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
 }
+
+/* Near the right edge the bubble opens leftward instead of overflowing. */
 .chat-bubble[data-flip] {
-  transform: translateX(-100%);
-  border-top-left-radius: 12px;
-  border-top-right-radius: 3px;
+  transform: translateX(calc(-100% + 24px));
+  border-radius: 12px 0 12px 12px;
+}
+
+/* Phones: the comment wraps rather than running off the screen. It is capped
+   by whichever is smaller — the design max or the space actually left beside
+   the cursor — so it stacks word-by-word near the edge, like the reference. */
+@media (max-width: 768px) {
+  .chat-bubble {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    max-width: min(240px, var(--bubble-room, 240px));
+    font-size: 14px;
+  }
 }
 .chat-caret {
   display: inline-block;
@@ -567,11 +623,6 @@ html.lenis body {
   .collab-stack {
     margin-left: 8px;
     gap: 3px;
-  }
-  .chat-bubble {
-    max-width: 62vw;
-    font-size: 0.8rem;
-    white-space: normal;
   }
   .collab-stack .chip {
     font-size: 0.55rem;
@@ -820,13 +871,18 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* Stacked panels the camera flies between */
+/* Stacked panels the camera flies between.
+   NOTE: deliberately NOT transform-style: preserve-3d. The flip transforms
+   the artboard itself inside .camera-track's perspective, so 3D depth is
+   already correct — and preserve-3d here would put every descendant into a
+   3D rendering context, where Chrome mis-resolves hit-testing on deeply
+   nested, untransformed elements: pointerdown on the hero name lands on the
+   <section> instead, and the layers silently stop being draggable. */
 .artboard {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  transform-style: preserve-3d;
   will-change: transform, box-shadow, border-radius;
 }
 

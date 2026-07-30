@@ -54,6 +54,26 @@ export const LENIS = {
 } as const;
 
 /**
+ * Hero dot field physics.
+ * Each dot is a mass on a spring: cursors push it away, the spring pulls it
+ * home. The displacement is what reads as a magnifying bubble under the
+ * pointer — see components/canvas/DotField.tsx.
+ */
+export const FIELD = {
+  /** Grid spacing and dot size, in CSS pixels. */
+  gap: 24,
+  dotRadius: 1.5,
+  restColor: "rgba(255, 255, 255, 0.06)",
+  /** The visitor's cursor. */
+  visitor: { radius: 150, strength: 1.5 },
+  /** The collaborator pushes harder and tints what it passes. */
+  collab: { radius: 200, strength: 2.5, tint: 0.35 },
+  /** Pull back toward the home position, then bleed off velocity. */
+  spring: 0.1,
+  damping: 0.8,
+} as const;
+
+/**
  * Hero design-surface choreography.
  * Timings in ms unless the key says seconds (GSAP tweens use seconds).
  */
@@ -69,6 +89,8 @@ export const HERO = {
     subtitleDelaySec: 1.5,
     /** Dragging unlocks once the name has settled (measured from reveal). */
     dragEnabledAt: 2500,
+    /** Absolute backstop from mount, in case the reveal signal never lands. */
+    dragFailsafe: 6000,
     /** Collaborator arrives after the intro has fully landed. */
     sequenceStart: 3500,
   },
@@ -87,13 +109,26 @@ export const HERO = {
     typeChar: 30,
     afterType: 1000,
     exit: 1000,
-    /** Per-frame lerp factor for the pointer glide. */
-    lerp: 0.085,
+    /**
+     * The collaborator pointer is a spring, not a lerp: velocity accrues
+     * toward the target and is damped each frame. A plain lerp decelerates
+     * into every target and feels sluggish by comparison.
+     */
+    accel: 0.06,
+    damping: 0.82,
   },
   drag: {
-    /** Beat after release before the layer starts realigning. */
+    /** Beat after release before the layer realigns. */
     settleDelay: 800,
-    snapSec: 1.2,
+    /**
+     * The layer snaps home instantly — measured on the reference, where
+     * polling every 60ms across the return captures no intermediate frame:
+     * it holds at the dragged position for `settleDelay`, then cuts to
+     * origin. (Its 1.2s tween is a no-op: the drag writes style.transform
+     * directly, so GSAP's cache still reads 0 and animates 0 → 0.) A real
+     * glide here reads as lag, which is exactly how it felt.
+     */
+    snapSec: 0,
     afterSnap: 1300,
     bubbleDelay: 300,
     bubbleCharMin: 25,
@@ -101,6 +136,10 @@ export const HERO = {
     bubbleHold: 2200,
     /** Chat bubble flips left when the pointer is within this of the edge. */
     flipEdge: 280,
+    /** Breathing room kept between the comment and the screen edge. */
+    bubbleGutter: 28,
+    /** Floor for the comment's width, so it never wraps one letter per line. */
+    bubbleMinWidth: 104,
   },
 } as const;
 
@@ -167,6 +206,12 @@ export const NAV_TRANSITION = {
 export const PRELOADER = {
   minDuration: 1.4,
   exitDuration: 0.9,
+  /**
+   * Hard ceiling in ms. If the reveal timeline hasn't finished by now
+   * (throttled rAF in a background tab, a stalled device), force it — the
+   * site's readiness signal depends on it.
+   */
+  failsafe: 4500,
 } as const;
 
 /**
